@@ -69,6 +69,18 @@ function tglincomplete($tgl)
     }
 }
 
+function tglincompletetime($tgl)
+{
+    if ($tgl != "")
+    {
+        // Konversi hari dan tanggal ke dalam format Indonesia
+//        $hari_array = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+        $tanggal = date('d-m-Y', strtotime($tgl));
+        $time = date('H:i:s', strtotime($tgl));
+        return $tanggal.' '.$time;
+    }
+}
+
 function split_date($tgl,$type)
 {
     return date($type, strtotime($tgl));  

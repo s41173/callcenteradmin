@@ -14,8 +14,8 @@ class Main extends MX_Controller
         $this->acl->otentikasi();
         $this->period = new Period_lib();
         $this->period = $this->period->get();
-        $this->customer = new Customer_lib();
-        $this->vendor = new Vendor_lib();
+//        $this->customer = new Customer_lib();
+//        $this->vendor = new Vendor_lib();
     }
 
     var $title = 'main';
@@ -51,11 +51,11 @@ class Main extends MX_Controller
        $data['main_view'] = 'main/main_view';
        
        // chart
-       $data['archart'] = site_url()."/main/ar_chart/";
-       $data['apchart'] = site_url()."/main/ap_chart/";
+     //  $data['archart'] = site_url()."/main/ar_chart/";
+     //  $data['apchart'] = site_url()."/main/ap_chart/";
        
        // table
-       $data['salestable'] = $this->get_ar_list();
+     //  $data['salestable'] = $this->get_ar_list();
        
        $this->load->view('template', $data);
 
