@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title> Airline Deposit </title>
+<title> Damage Receipt </title>
 <style media="all">
 
 	#logo { margin:0 0 0 75px;}
@@ -38,13 +38,14 @@
 
 <div style="width:750px; font-family:Arial, Helvetica, sans-serif; font-size:12px;"> 
 	
-	<h2 style="font-size:18px; font-weight:normal; text-align:center; text-decoration:underline;"> Airline Deposit </h2> <div style="clear:both; "></div> 
+	<h2 style="font-size:18px; font-weight:normal; text-align:center; text-decoration:underline;"> Damage Receipt </h2> <div style="clear:both; "></div> 
 	
 	<div style="width:350px; border:0px solid #000; float:left;">
 		<table style="font-size:11px;">
 			<tr> <td> Code </td> <td>:</td> <td> <?php echo $pid; ?> </td> </tr>
-            <tr> <td> Currency </td> <td>:</td> <td> IDR </td> </tr>
-            <tr> <td> Dates </td> <td>:</td> <td> <?php echo $date; ?> </td> </tr>
+            <tr> <td> Category </td> <td>:</td> <td> <?php echo $category; ?> </td> </tr>
+            <tr> <td> Period </td> <td>:</td> <td> <?php echo $date.' - '.$due; ?> </td> </tr>
+            <tr> <td> Status </td> <td>:</td> <td> <?php echo $status; ?> </td> </tr>
 		</table>
 	</div>
 	
@@ -54,25 +55,15 @@
 		
 		<table class="product">
 
-		 <tr> <th> Description </th> <th> Account </th> <th> Airline </th> <th> Amount </th> </tr>
+		 <tr> <th> Description </th> <th> Address </th> <th> Coordinate </th> <th> Staff </th> </tr>
 		 
 		 <tr> 
-         <td> <?php echo $description; ?> </td>
-         <td class="left"> <?php echo $account; ?> </td>
-         <td class="left"> <?php echo $airline; ?> </td>
-         <td class="right"> <?php echo $amount; ?>,- </td> </tr>   
-		 
-<tr> <td></td> <td></td> <td class="right"> <b> Total : </b> </td> <td class="right"> <b> <?php echo $amount; ?>,- </b> </td> </tr>
+         <td class="left"> <?php echo $description; ?> </td>
+         <td class="left"> <?php echo $address; ?> </td>
+         <td class="left"> <?php echo $coordinate; ?> </td>
+         <td class="right"> <?php echo $staff; ?>,- </td> </tr>   
 			
 		</table>
-		
-		<div style="float:left; width:600px; border:0px solid #000; margin:5px 0 5px 0;">  
-			<table style="font-size:11px;">
-				<tr> <td> In Words </td> <td>:</td> 
-				     <td> <?php echo ucfirst($terbilang); ?> </td> 
-				</tr>
-			</table>
-		</div>
 		
 		<div style="clear:both; "></div>
 		
@@ -82,11 +73,11 @@
 			.sig td{ width:155px;}
 		</style>
 			<table border="0" class="sig">
-				<tr> <td> Approved By : </td> <td> Reviewed By : </td> <td> Paid By : </td> </tr>
+				<tr> <td> Approved By : </td> <td> Reviewed By : </td> </tr>
 			</table> <br> <br> <br> <br> <br> <br>
 			
 			<table border="0" class="sig">
-				<tr> <td> Manager </td> <td> Accounting </td> <td> ___________________ </td> </tr>
+				<tr> <td> Manager </td> <td> ( <?php echo $user; ?> ) </td> </tr>
 			</table>
 		</div>
 		
@@ -94,7 +85,7 @@
 			
 			<table>
 				<p> &nbsp; &nbsp; Dipesan Oleh, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Disetujui Oleh, </p> <br> <br> <br> <br>
-				<p style="text-align:right;"> ( <?php echo $user; ?> ) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (_______________) </p>
+				<p style="text-align:right;"> (  ) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (_______________) </p>
 				<p> &nbsp; &nbsp; &nbsp; Purchasing  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Direktur Utama </p>
 			</table>
 			<br>
@@ -103,7 +94,7 @@
 		<div style="clear:both; ">
 		
 	</div>	
-	
+    </div>
 </div>
 
 </body>

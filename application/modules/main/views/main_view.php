@@ -85,58 +85,28 @@
         </style>
         
             <div class="ixcon">
-                <a href="<?php echo site_url('purchase');?>">
-                <img alt="Article Manager" src="<?php echo base_url().'images/purchase.png';?>">
-                <p> Purchase </p>
-                </a>
-            </div>
-        
-            <div class="ixcon">
-                <a href="<?php echo site_url('product');?>">
-                <img alt="user" src="<?php echo base_url().'images/inventory.png';?>">
-                <p> Inventory </p>
-              </a>
-            </div>
-        
-            <div class="ixcon">
-                <a href="<?php echo site_url('stock_transfer');?>">
+                <a href="<?php echo site_url('category');?>">
                 <img alt="user" src="<?php echo base_url().'images/backup.png';?>">
-                <p> Stock Transfer </p>
+                <p> Category </p>
               </a>
             </div>
         
             <div class="ixcon">
-                <a href="<?php echo site_url('sales');?>">
+                <a href="<?php echo site_url('damage');?>">
                 <img alt="setting" src="<?php echo base_url().'images/sales.png';?>">
-                <p> Sales </p>
+                <p> Damage List </p>
               </a>
         
             </div>
         
             <div class="ixcon">
-                <a href="<?php echo site_url('transfer');?>">
+                <a href="<?php echo site_url('complain');?>">
                 <img alt="setting" src="<?php echo base_url().'images/receipt.png';?>">
-                <p> Transaction </p>
+                <p> Ticket Support </p>
               </a>
         
             </div>
             
-            <div class="ixcon">
-                <a href="<?php echo site_url('report_reference');?>">
-                <img alt="setting" src="<?php echo base_url().'images/settlement.png';?>">
-                <p> General Ledger </p>
-              </a>
-        
-            </div>
-        
-            <div class="ixcon">
-                <a href="<?php echo site_url('payroll');?>">
-                <img alt="setting" src="<?php echo base_url().'images/role.png';?>">
-                <p> Payroll </p>
-              </a>
-        
-            </div>
-        
             <div class="ixcon">
                 <a href="<?php echo site_url('admin');?>">
                 <img alt="user" src="<?php echo base_url().'images/user_icon.png';?>">
@@ -202,78 +172,7 @@ $(document).ready(function () {
 	});
 	
 });
-</script>       
-        
-       <!-- box ar chart-->
-       <div id="chartContainer" class="col-md-6 col-sm-12 col-xs-12 chartbox margin">  </div> 
-       <div id="" class="col-md-6 col-sm-12 col-xs-12 tablebox margin">
-           
-            <div class="x_panel">
-                  <div class="x_title">
-                    <h2>  Account Receivable Due - List </h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div class="table-responsive">    
-                      <?php echo ! empty($salestable) ? $salestable : ''; ?>       
-                    </div>
-                  </div>
-            </div>
-           
-       </div>     
-        
-       <!-- box ap chart-->
-       <div id="chartContainer2" class="col-md-6 col-sm-12 col-xs-12 chartbox margin">  </div> 
-       <div id="" class="col-md-6 col-sm-12 col-xs-12 tablebox margin"> 
-           
-           <div class="x_panel">
-                  <div class="x_title">
-                    <h2>  Payable Due - List </h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div class="table-responsive">  
-                    <?php echo ! empty($purchasetable) ? $purchasetable : ''; ?>  
-                    </div>
-
-                  </div>
-            </div>
-       </div>  
-        
-       <!-- post dated check  -->
-       <div id="" class="col-md-6 col-sm-12 col-xs-12 tablebox"> 
-           
-           <div class="x_panel">
-                  <div class="x_title">
-                    <h2> Post-Dated Checks Issuance  - List </h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div class="table-responsive">  
-                    <?php echo ! empty($checkouttable) ? $checkouttable : ''; ?>  
-                    </div>
-
-                  </div>
-            </div>
-       </div>   
-        
-       <!-- stock min qty  -->
-       <div id="" class="col-md-6 col-sm-12 col-xs-12 tablebox"> 
-           
-           <div class="x_panel">
-                  <div class="x_title">
-                    <h2> Stock Minimum  - List </h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div class="table-responsive">  
-                    <?php echo ! empty($producttable) ? $producttable : ''; ?>  
-                    </div>
-
-                  </div>
-            </div>
-       </div>   
-    
+</script>         
     </div> 
 
 <!-- end content -->

@@ -11,8 +11,9 @@ $(document).ready(function (e) {
 
 
 	$('#ds1,#ds2').daterangepicker({
-        locale: {format: 'YYYY-MM-DD'},
+        locale: {format: 'YYYY-MM-DD hh:mm A'},
 		singleDatePicker: true,
+		timePicker:true,
         showDropdowns: true
 	 });
 	 
@@ -23,76 +24,9 @@ $(document).ready(function (e) {
         showDropdowns: true
 	 });
 
-	 $('#ds4').val(''); 
-	// ckreturn
-	$('#ckreturn').change(function() {
-        if($(this).is(":checked")) {
-		  $("#ds4").prop('disabled', false);
-		}else {
-			$('#ds4').val('');
-			$("#ds4").prop('disabled', true);
-	    }
-	});
-	
-	$('#ckreturn_update').change(function() {
-        if($(this).is(":checked")) {
-		  $("#ds4_update").prop('disabled', false);
-		}else {
-			$("#ds4_update").prop('disabled', true);
-	    }
-    });
-
 	load_data();  
 	
 	// batas dtatable
-
-	// fungsi jquery konfirmasi pembayaran
-	$(document).on('click','.text-confirmation',function(e)
-	{	
-		e.preventDefault();
-		var element = $(this);
-		var del_id = element.attr("id");
-		var url = sites_confirmation +"/"+ del_id;
-		$(".error").fadeOut();
-		
-		$("#myModal").modal('show');
-
-		// batas
-		$.ajax({
-			type: 'POST',
-			url: url,
-    	    cache: false,
-			headers: { "cache-control": "no-cache" },
-			success: function(result) {
-				
-				res = result.split("|");
-				
-				$("#hid").val(res[0]);
-				$("#taccname").val(res[1]);
-				$("#taccno").val(res[2]);
-				$('#taccbank').val(res[3]);
-				$('#tamount').val(res[4]);
-			    $('#cbank').val(res[5]);
-				$('#ds3').val(res[9]);
-				
-				$("#tccname").val(res[7]);
-				$("#tccno").val(res[6]);
-				$('#tccbank').val(res[8]);
-			}
-		})
-		return false;	
-	});
-	
-	// fungsi jquery update
-	$(document).on('click','.text-primary',function(e)
-	{	e.preventDefault();
-		var element = $(this);
-		var del_id = element.attr("id");
-		var url = sites_get +"/"+ del_id;
-		
-		window.location.href = url;
-		
-	});
 
 	// fungsi jquery update transaction item
 	$(document).on('click','.text-update',function(e)
@@ -173,17 +107,6 @@ $(document).ready(function (e) {
 		window.open(url, "_blank", "scrollbars=1,resizable=0,height=600,width=800");
 		
 	});
-
-	$(document).on('click','.text-shipping',function(e)
-	{	e.preventDefault();
-		var element = $(this);
-		var del_id = element.attr("id");
-		var url = sites_print_invoice +"/"+ del_id +"/shipping";
-		
-		// window.location.href = url;
-		window.open(url, "Invoice SO-0"+del_id, "toolbar=yes,scrollbars=yes,resizable=yes,top=200,left=600,width=800,height=600");
-		
-	});	
 	
 	// publish status
 	$(document).on('click','.primary_status',function(e)
@@ -231,10 +154,8 @@ $(document).ready(function (e) {
 				res = data.split("|");
 				if (res[0] == "true")
 				{   
-			        error_mess(1,res[1],0);
-					
-				    var url = sites_get +"/"+ res[2];
-					window.location.href = url;
+					error_mess(1,res[1],0);
+					setTimeout(function(){ location.reload(); }, 3000);
 				}
 				else if (res[0] == 'warning'){ error_mess(2,res[1],0); }
 				else{ error_mess(3,res[1],0); }
@@ -247,46 +168,6 @@ $(document).ready(function (e) {
 		})
 		return false;
 	});
-
-	// ajax form non upload data
-	$("#edit_ajax_item").on('submit',(function(e) {
-		
-		var elem = $(this);
-		e.preventDefault();
-		$.ajax({
-        	url: $(this).attr('action'),
-			type: "POST",
-			data:  new FormData(this),
-			contentType: false,
-    	    cache: false,
-			processData:false,
-			beforeSend : function()
-			{
-				//$("#preview").fadeOut();
-			},
-			success: function(data)
-		    {
-				res = data.split("|");
-				
-				if(res[0]=='true')
-				{
-					// invalid file format.
-					error_mess(1,res[1]);
-					location.reload(true);
-					// if (elem.attr('id') == "upload_form_non"){ resets(); }
-				}
-				else if(res[0] == 'warning'){ error_mess(2,res[1]); }
-				else if(res[0] == 'error'){ error_mess(3,res[1]); }
-		    },
-		  	error: function(e) 
-	    	{
-				//$("#error").html(e).fadeIn();
-				error_mess(3,e);
-				console.log(e.responseText);	
-	    	} 	        
-	   });
-	     
-	}));
 
 	// ajax transaction data 
 	$('#ajaxtransform,#ajaxtransform1').submit(function() {
@@ -319,58 +200,85 @@ $(document).ready(function (e) {
 	});
 
 		// fungsi ajax get customer
-	$(document).on('change','#ccustomer',function(e)
+	$(document).on('click','#brequest',function(e)
 	{	
 		e.preventDefault();
-		var value = $("#ccustomer").val();
-		var url = sites+'/get_customer/'+value;
+		
+		var nama = $("#nama").val();
+		var no = $("#no").val();
+		var id = $("#id").val();
+		var url = sites+'/request';
 
-		if (value){ 
-		    // batas
+		if (nama != '' || no != '' || id != ''){
+
+			// batas
 			$.ajax({
 				type: 'POST',
 				url: url,
-	    	    cache: false,
+				data: "nama="+nama+"&no="+no+"&id="+id,
+				cache: false,
 				headers: { "cache-control": "no-cache" },
 				success: function(result) {
-				var res = result.split('|');
-				$("#temail").val(res[0]);
-				$("#tshipadd,#tshipaddkurir").val(res[1]);
+				if (result){
+				   var res = result.split('|');
+				   $("#no").val(res[0]);
+				   $("#nama").val(res[1]);
+				   $("#id,#hcust").val(res[2]);
+				   $("#no,#nama,#id").prop('disabled', true);
+				}
+				
+				// $("#temail").val(res[0]);
+				// $("#tshipadd,#tshipaddkurir").val(res[1]);
+
 				}
 			})
 			return false;
-
-		}else { swal('Error Load Data...!', "", "error"); }
+		}else{ swal('Parameter Required...!', "", "error"); }
 
 	});
 
-	$(document).on('change','#cpassenger',function(e)
+	// fungsi get damage type
+	$(document).on('change','#ccategoryform',function(e)
 	{	
 		e.preventDefault();
+		
 		var value = $(this).val();
+		var url = sites+'/combo_damage/'+value;
 
-		if (value){ 
-			var res = value.split('|');
-			$("#tpassenger").val(res[0]);
-			$("#tidcard").val(res[1]);
-		}
+		if (value != 0){
+
+			// batas
+			$.ajax({
+				type: 'POST',
+				url: url,
+				cache: false,
+				headers: { "cache-control": "no-cache" },
+				success: function(result) {
+				  if (result){ $("#damagebox").html(result);}
+				}
+			})
+			return false;
+		}else{ $("#damagebox").html(""); }
+
 	});
 
-	// get details product
-	$(document).on('change','#cpayment',function(e)
+
+	$(document).on('click','#breset',function(e)
 	{	
 		e.preventDefault();
-
-		if ($(this).val() == 5){
-			$("#caccount").prop('disabled', false);
-		}else{ $("#caccount").prop('disabled', true); }
+		$("#no").val('');
+		$("#nama").val('');
+		$("#id,#hcust").val('');
+		$("#no,#nama,#id").prop('disabled', false);
 	});
+
 
 	$('#searchform').submit(function() {
 		
-		var cust = $("#ccustomer").val();
-		var paid = $("#cpaid").val();
-		var param = ['searching',cust,paid];
+		var ticket = $("#tticket").val();
+		var customer = $("#tcustomer").val();
+		var category = $("#ccategory").val();
+		var param = ['searching',ticket,customer,category];
 		
 		$.ajax({
 			type: 'POST',
@@ -383,6 +291,7 @@ $(document).ready(function (e) {
 				
 				if (!param[1]){ param[1] = 'null'; }
 				if (!param[2]){ param[2] = 'null'; }
+				if (!param[3]){ param[3] = 'null'; }
 				load_data_search(param);
 			}
 		});
@@ -406,7 +315,7 @@ $(document).ready(function (e) {
 			
 		    $.ajax({
 				type : 'GET',
-				url: source+"/"+search[0]+"/"+search[1]+"/"+search[2],
+				url: source+"/"+search[0]+"/"+search[1]+"/"+search[2]+"/"+search[3],
 				//force to handle it as text
 				contentType: "application/json",
 				dataType: "json",
@@ -419,7 +328,6 @@ $(document).ready(function (e) {
 		$("#chkbox").append('<input type="checkbox" name="newsletter" value="accept1" onclick="cekall('+s.length+')" id="chkselect" class="chkselect">');
 							
 		for(var i = 0; i < s.length; i++) {
-			if (s[i][6] == 1){ stts = 'btn btn-success'; }else { stts = 'btn btn-danger'; }
 			oTable.fnAddData([
 '<input type="checkbox" name="cek[]" value="'+s[i][0]+'" id="cek'+i+'" style="margin:0px"  />',
 						  i+1,
@@ -427,12 +335,10 @@ $(document).ready(function (e) {
 						  s[i][2],
 						  s[i][3],
 						  s[i][4],
+						  s[i][5],
 						  s[i][7],
 '<div class="btn-group" role"group">'+
-'<a href="" class="'+stts+' btn-xs primary_status" id="' +s[i][0]+ '" title="Confirmation Status"> <i class="fa fa-power-off"> </i> </a> '+
 '<a href="" class="btn btn-success btn-xs text-print" id="' +s[i][0]+ '" title="Invoice Status"> <i class="fa fa-print"> </i> </a> '+
-'<a href="" class="btn btn-default btn-xs text-confirmation" id="' +s[i][0]+ '" title="Payment Confirmation"> <i class="fa fa-credit-card-alt"> </i> </a> '+
-'<a href="" class="btn btn-primary btn-xs text-primary" id="' +s[i][0]+ '" title=""> <i class="fa fas-2x fa-edit"> </i> </a> '+
 '<a href="#" class="btn btn-danger btn-xs text-danger" id="'+s[i][0]+'" title="delete"> <i class="fa fas-2x fa-trash"> </i> </a>'+
 '</div>'
 							  ]);										
@@ -473,7 +379,6 @@ $(document).ready(function (e) {
 		$("#chkbox").append('<input type="checkbox" name="newsletter" value="accept1" onclick="cekall('+s.length+')" id="chkselect" class="chkselect">');
 							
 							for(var i = 0; i < s.length; i++) {
-						  if (s[i][6] == 1){ stts = 'btn btn-success'; }else { stts = 'btn btn-danger'; }
 						  oTable.fnAddData([
 '<input type="checkbox" name="cek[]" value="'+s[i][0]+'" id="cek'+i+'" style="margin:0px"  />',
 										i+1,
@@ -481,12 +386,10 @@ $(document).ready(function (e) {
 										s[i][2],
 										s[i][3],
 										s[i][4],
+										s[i][5],
 										s[i][7],
 '<div class="btn-group" role"group">'+
-'<a href="" class="'+stts+' btn-xs primary_status" id="' +s[i][0]+ '" title="Confirmation Status"> <i class="fa fa-power-off"> </i> </a> '+
 '<a href="" class="btn btn-success btn-xs text-print" id="' +s[i][0]+ '" title="Invoice Status"> <i class="fa fa-print"> </i> </a> '+
-'<a href="" class="btn btn-default btn-xs text-confirmation" id="' +s[i][0]+ '" title="Payment Confirmation"> <i class="fa fa-credit-card-alt"> </i> </a> '+
-'<a href="" class="btn btn-primary btn-xs text-primary" id="' +s[i][0]+ '" title=""> <i class="fa fas-2x fa-edit"> </i> </a> '+
 '<a href="#" class="btn btn-danger btn-xs text-danger" id="'+s[i][0]+'" title="delete"> <i class="fa fas-2x fa-trash"> </i> </a>'+
 '</div>'
 										    ]);										

@@ -303,6 +303,7 @@ $(document).ready(function (e) {
 						  s[i][2],
 						  s[i][4],
 						  s[i][7],
+						  s[i][9],
 '<div class="btn-group" role"group">'+
 '<a href="" class="'+stts+' btn-xs primary_status" id="' +s[i][0]+ '" title="Primary Status"> <i class="fa fa-power-off"> </i> </a> '+
 '<a href="" class="btn btn-warning btn-xs text-invoice" id="' +s[i][0]+ '" title=""> <i class="fa fas-2x fa-book"> </i> </a>'+
@@ -358,6 +359,7 @@ $(document).ready(function (e) {
 										s[i][2],
 										s[i][4],
 										s[i][7],
+										s[i][9],
 '<div class="btn-group" role"group">'+
 '<a href="" class="'+stts+' btn-xs primary_status" id="' +s[i][0]+ '" title="Primary Status"> <i class="fa fa-power-off"> </i> </a> '+
 '<a href="" class="btn btn-warning btn-xs text-invoice" id="' +s[i][0]+ '" title=""> <i class="fa fas-2x fa-book"> </i> </a>'+

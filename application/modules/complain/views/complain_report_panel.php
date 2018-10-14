@@ -4,7 +4,7 @@
 <div class="modal-content">
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">&times;</button>
-  <h4 class="modal-title"> Deposit - Report </h4>
+  <h4 class="modal-title"> Sales Report </h4>
 </div>
 <div class="modal-body">
  
@@ -15,10 +15,26 @@
   <div class="clearfix"></div> 
 </div>
 <div class="x_content">
+    
+<?php
+                        
+$atts2 = array(
+	  'class'      => 'btn btn-primary button_inline',
+	  'title'      => 'Product',
+	  'width'      => '800',
+	  'height'     => '600',
+	  'scrollbars' => 'yes',
+	  'status'     => 'yes',
+	  'resizable'  => 'yes',
+	  'screenx'    =>  '\'+((parseInt(screen.width) - 800)/2)+\'',
+	  'screeny'    =>  '\'+((parseInt(screen.height) - 600)/2)+\'',
+);
+
+?>    
 
 <form id="" data-parsley-validate class="form-horizontal form-label-left" method="POST" 
 action="<?php echo $form_action_report; ?>" enctype="multipart/form-data">
-    
+         
      <div class="form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12"> Period </label>
         <div class="col-md-9 col-sm-9 col-xs-12">     
@@ -26,23 +42,22 @@ action="<?php echo $form_action_report; ?>" enctype="multipart/form-data">
         </div>
     </div>
     
-     <div class="form-group">
+    <div class="form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12"> Type </label>
-        <div class="col-md-5 col-sm-5 col-xs-12">     
-<select name="ctype" class="form-control">
-    <option value="0"> Summary </option>
-    <option value="1"> Pivotable </option>
-</select>
+        <div class="col-md-5 col-sm-9 col-xs-12">     
+			<select name="ctype" class="form-control">
+              <option value="0"> Summary </option>
+              <option value="1"> Pivottable </option>
+            </select>
         </div>
     </div>
-    
+
       <div class="ln_solid"></div>
       <div class="form-group">
-          <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-          <div class="btn-group"> 
-           <button type="submit" class="btn btn-primary">Post</button>
-           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3 btn-group">      
+          <button type="submit" class="btn btn-primary">Post</button>
+          <button type="reset" class="btn btn-success"> Reset </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
           </div>
       </div>
   </form> 

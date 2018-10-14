@@ -31,13 +31,13 @@ class Category_lib extends Main_Model {
 
     function combo()
     {
+        $data['options'][0] = 'Top';
         $this->db->select($this->field);
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
 //        $this->db->where('parent_id >',0);
         $this->db->order_by('name', 'asc');
         $val = $this->db->get($this->tableName)->result();
-        $data['options'][0] = 'Top';
         foreach($val as $row){ $data['options'][$row->id] = ucfirst($row->name); }
         return $data;
     }
@@ -48,7 +48,6 @@ class Category_lib extends Main_Model {
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
         $this->db->order_by('name', 'asc');
-        $data['options'][''] = '-- All --';
         $val = $this->db->get($this->tableName)->result();
         foreach($val as $row){ $data['options'][$row->id] = ucfirst($row->name); }
         return $data;

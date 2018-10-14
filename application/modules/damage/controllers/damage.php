@@ -17,10 +17,11 @@ class Damage extends MX_Controller
         $this->user = new Admin_lib();
         $this->load->library('terbilang');
         $this->category = new Category_lib();
+        $this->complain = new Complain_lib();
     }
 
     private $properti, $modul, $title,$category;
-    private $user;
+    private $user, $complain;
 
     private  $atts = array('width'=> '800','height'=> '600',
                       'scrollbars' => 'yes','status'=> 'yes',
@@ -41,7 +42,9 @@ class Damage extends MX_Controller
 	foreach($result as $res)
 	{
            if ($res->status == 0){ $stts = 'Progress'; }else{ $stts = 'Completed'; }
-	   $output[] = array ($res->id, tglincompletetime($res->dates), tglincompletetime($res->due), strtoupper($this->category->get_name($res->category)), $res->description, $res->address, $res->coordinate, $stts, $res->approved);
+	   $output[] = array ($res->id, tglincompletetime($res->dates), tglincompletetime($res->due), strtoupper($this->category->get_name($res->category)), $res->description, $res->address, $res->coordinate, $stts, 
+                              $res->approved, $this->complain->total_complain($res->id)
+                             );
 	}
             $this->output
             ->set_status_header(200)
@@ -96,7 +99,7 @@ class Damage extends MX_Controller
         $this->table->set_empty("&nbsp;");
 
         //Set heading untuk table
-        $this->table->set_heading('#','No', 'Code', 'Category', 'Date', 'Due', 'Description', 'Status', 'Action');
+        $this->table->set_heading('#','No', 'Code', 'Category', 'Date', 'Due', 'Description', 'Status', '#', 'Action');
 
         $data['table'] = $this->table->generate();
         $data['source'] = site_url($this->title.'/getdatatable');
@@ -276,20 +279,23 @@ class Damage extends MX_Controller
        $damage = $this->Damage_model->get_by_id($pid)->row();
 
        $data['h2title'] = 'Print Invoice'.$this->modul['title'];
+       if ($damage->status == 0){ $stts = 'Progress'; }else{ $stts = 'Completed'; }
        
        $data['p_name'] = $this->properti['name'];
-       $data['pid'] = 'DA-0'.$pid;
-       $data['date'] = tglin($damage->dates);
-       $data['airline'] = $this->airline->get_detail_field('code',$damage->airline).' - '.$this->airline->get_detail_field('name',$damage->airline);
+       $data['pid'] = 'DM-0'.$pid;
+       $data['date'] = tglincompletetime($damage->dates);
+       $data['due'] = tglincompletetime($damage->due);
+       $data['category'] = strtoupper($this->category->get_name($damage->category));
        $data['description'] = $damage->description;
-       $data['amount'] = idr_format($damage->amount);
-       $data['account'] = $this->account->get_code($damage->account).'-'.$this->account->get_name($damage->account);
+       $data['address'] = $damage->address;
+       $data['coordinate'] = $damage->coordinate;
+       $data['status'] = $stts;
+       $data['staff'] = $damage->staff;
        
-       if ($damage->approved == 1){ $stts = 'Y'; }else{ $stts = 'N'; }
-       $data['approved'] = $stts;
+       if ($damage->approved == 1){ $approval = 'Y'; }else{ $approval = 'N'; }
+       $data['approved'] = $approval;
        $data['log'] = $this->session->userdata('log');
-       
-       $data['terbilang'] = $this->terbilang->baca($damage->amount).' Rupiah';
+       $data['user'] = $this->session->userdata('username');
 
        $this->load->view('damage_invoice', $data);
    }
@@ -328,8 +334,8 @@ class Damage extends MX_Controller
         $data['company'] = $this->properti['name'];
         $data['reports'] = $this->Damage_model->report($start,$end)->result();
         
-        $this->load->view('damage_report', $data); 
-        
+        if ($this->input->post('ctype')==0){ $this->load->view('damage_report', $data);     
+        }else{ $this->load->view('damage_pivot', $data);  }
     }
 
 // ====================================== REPORT =========================================
