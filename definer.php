@@ -1,5 +1,5 @@
 <?php
-define('API', 'http://localhost/ci_rest/index.php/api/');
+define('API', 'http://www.pdamtirtauli.com/cc/index.php/api/');
 define('BASE_URL', 'https://delicaindonesia.com');
 
 ?>
