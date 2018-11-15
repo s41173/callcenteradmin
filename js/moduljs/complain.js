@@ -205,17 +205,18 @@ $(document).ready(function (e) {
 		e.preventDefault();
 		
 		var nama = $("#nama").val();
+		var meter = $("#meter").val();
 		var no = $("#no").val();
 		var id = $("#id").val();
 		var url = sites+'/request';
 
-		if (nama != '' || no != '' || id != ''){
+		if (nama != '' || no != '' || id != '' || meter != ''){
 
 			// batas
 			$.ajax({
 				type: 'POST',
 				url: url,
-				data: "nama="+nama+"&no="+no+"&id="+id,
+				data: "nama="+nama+"&no="+no+"&id="+id+"&meter="+meter,
 				cache: false,
 				headers: { "cache-control": "no-cache" },
 				success: function(result) {
@@ -224,7 +225,8 @@ $(document).ready(function (e) {
 				   $("#no").val(res[0]);
 				   $("#nama").val(res[1]);
 				   $("#id,#hcust").val(res[2]);
-				   $("#no,#nama,#id").prop('disabled', true);
+				   $("#meter").val(res[3]);
+				   $("#no,#nama,#id,#meter").prop('disabled', true);
 				}
 				
 				// $("#temail").val(res[0]);
@@ -233,6 +235,7 @@ $(document).ready(function (e) {
 				}
 			})
 			return false;
+
 		}else{ swal('Parameter Required...!', "", "error"); }
 
 	});
@@ -268,8 +271,9 @@ $(document).ready(function (e) {
 		e.preventDefault();
 		$("#no").val('');
 		$("#nama").val('');
+		$("#meter").val('');
 		$("#id,#hcust").val('');
-		$("#no,#nama,#id").prop('disabled', false);
+		$("#no,#nama,#id,#meter").prop('disabled', false);
 	});
 
 

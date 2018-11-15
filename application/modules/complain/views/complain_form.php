@@ -68,7 +68,7 @@
 		
     <style type="text/css">
        .xborder{ border: 1px solid red;}
-       #custtitlebox{ height: 155px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
+       #custtitlebox{ height: 205px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
         #amt{ color: #000; margin-top: 35px; text-align: right; font-weight: bold;}
         #amt span{ color: blue;}
         .labelx{ font-weight: bold; color: #000;}
@@ -98,6 +98,7 @@
 <tr> <td> <input type="text" name="nama" id="nama" class="form-control custtext" placeholder="Nama Pelanggan"> 
           <input type="hidden" name="hcust" id="hcust" >
      </td> </tr>
+<tr> <td> <input type="number" name="meter" id="meter" class="form-control custtext" placeholder="No Meter"> </td> </tr>
                    </table>
                  
                </div>

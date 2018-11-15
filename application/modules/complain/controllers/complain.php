@@ -195,14 +195,15 @@ class Complain extends MX_Controller
           $nama = $this->input->post('nama');
           $no = $this->input->post('no');
           $id = $this->input->post('id');
-          $nilai = '{ "no_pelanggan":"'.$no.'", "nama_pelanggan":"'.$nama.'", "id_pelanggan":"'.$id.'" }';
-        }else{ $nilai = '{ "no_pelanggan":"", "nama_pelanggan":"", "id_pelanggan":"'.$type.'" }'; }
+          $meter = $this->input->post('meter');
+          $nilai = '{ "no_pelanggan":"'.$no.'", "nama_pelanggan":"'.$nama.'", "id_pelanggan":"'.$id.'", "no_meter":"'.$meter.'" }';
+        }else{ $nilai = '{ "no_pelanggan":"", "nama_pelanggan":"", "no_meter":"", "id_pelanggan":"'.$type.'" }'; }
         
         $url = constant("API").'customers';
         $response = $this->api->request($url, $nilai);
         $datax = (array) json_decode($response, true);
         if ($datax){ 
-            if (!$type){ echo $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'];    
+            if (!$type){ echo $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['No_Meter'];    
             }else{ return $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['Alamat'].'|'.$datax[0]['No_Rumah']; }
         }
     }
