@@ -1,7 +1,7 @@
 $(document).ready(function (e) {
 	
     // function general
-	
+	$("#addressbox").hide();
 	$('#datatable-buttons').dataTable({dom: 'T<"clear">lfrtip', tableTools: {"sSwfPath": site}});
 	 
 	// // date time picker
@@ -155,7 +155,10 @@ $(document).ready(function (e) {
 				if (res[0] == "true")
 				{   
 					error_mess(1,res[1],0);
-					setTimeout(function(){ location.reload(); }, 3000);
+					$("#noticket").val(res[3]);
+					$("#buttonsave").prop('disabled', true);
+
+					setTimeout(function(){ location.reload(); }, 45000);
 				}
 				else if (res[0] == 'warning'){ error_mess(2,res[1],0); }
 				else{ error_mess(3,res[1],0); }
@@ -221,11 +224,15 @@ $(document).ready(function (e) {
 				headers: { "cache-control": "no-cache" },
 				success: function(result) {
 				if (result){
+
+					console.log(result);
+
 				   var res = result.split('|');
 				   $("#no").val(res[0]);
 				   $("#nama").val(res[1]);
 				   $("#id,#hcust").val(res[2]);
 				   $("#meter").val(res[3]);
+				   $("#alamat,#taddress").val(res[4]);
 				   $("#no,#nama,#id,#meter").prop('disabled', true);
 				}
 				
@@ -247,7 +254,8 @@ $(document).ready(function (e) {
 		
 		var value = $(this).val();
 		var url = sites+'/combo_damage/'+value;
-
+		$("#addressbox").val('');
+		$("#addressbox").hide();
 		if (value != 0){
 
 			// batas
@@ -265,6 +273,33 @@ $(document).ready(function (e) {
 
 	});
 
+	$(document).on('change','#cdamage',function(e)
+	{	
+		e.preventDefault();
+		
+		var value = $(this).val();
+		var url = sites+'/get_address/'+value;
+
+		if (value != 0){
+
+			// batas
+			$.ajax({
+				type: 'POST',
+				url: url,
+				cache: false,
+				headers: { "cache-control": "no-cache" },
+				success: function(result) {
+				  if (result){
+					   $("#addressbox").show();
+					   $("#addressbox").val(result);
+				  }
+				}
+			})
+			return false;
+		}else{ $("#damagebox").html(""); }
+
+	});
+
 
 	$(document).on('click','#breset',function(e)
 	{	
@@ -272,6 +307,7 @@ $(document).ready(function (e) {
 		$("#no").val('');
 		$("#nama").val('');
 		$("#meter").val('');
+		$("#alamat,#taddress").val('');
 		$("#id,#hcust").val('');
 		$("#no,#nama,#id,#meter").prop('disabled', false);
 	});

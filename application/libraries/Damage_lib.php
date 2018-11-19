@@ -59,6 +59,30 @@ class Damage_lib extends Main_Model {
         }else{ $data['options'][0] = '--'; }
         return $data;
     }
+    
+    function get_address($id=null)
+    {
+        if ($id)
+        {
+            $this->db->select($this->field);
+            $this->db->where('id', $id);
+            $val = $this->db->get($this->tableName)->row();
+            if ($val){ return $val->address; }
+        }
+        else { return ''; }
+    }
+    
+    function get_dates($id=null)
+    {
+        if ($id)
+        {
+            $this->db->select($this->field);
+            $this->db->where('id', $id);
+            $val = $this->db->get($this->tableName)->row();
+            if ($val){ return tglincompletetime($val->dates); }
+        }
+        else { return ''; }
+    }
 
     function get_name($id=null)
     {

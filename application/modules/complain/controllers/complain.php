@@ -203,7 +203,7 @@ class Complain extends MX_Controller
         $response = $this->api->request($url, $nilai);
         $datax = (array) json_decode($response, true);
         if ($datax){ 
-            if (!$type){ echo $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['No_Meter'];    
+            if (!$type){ echo $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['No_Meter'].'|'.$datax[0]['Alamat'].' - '.$datax[0]['No_Rumah'];    
             }else{ return $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['Alamat'].'|'.$datax[0]['No_Rumah']; }
         }
     }
@@ -213,6 +213,10 @@ class Complain extends MX_Controller
         $damage = $this->damage->combo_category($category);
         $js = "class='form-control' id='cdamage' tabindex='-1' style='min-width:260px; margin-top:5px;' "; 
         echo form_dropdown('cdamage', $damage, isset($default['damage']) ? $default['damage'] : '', $js);
+    }
+    
+    function get_address($uid){
+        echo $this->damage->get_dates($uid).'  ::  '.$this->damage->get_address($uid);
     }
     
     function add()
@@ -260,7 +264,7 @@ class Complain extends MX_Controller
                            'created' => date('Y-m-d H:i:s'), 'log' => $this->session->userdata('log'));
 
             $this->Complain_model->add($complain);
-            echo "true|One $this->title data successfully saved!|".$this->Complain_model->counter(1);
+            echo "true|One $this->title data successfully saved!|".$this->Complain_model->counter(1).'|'.$ticket;
            // $this->session->set_flashdata('message', "One $this->title data successfully saved!");
 //            redirect($this->title.'/update/'.$this->Complain_model->counter(1));
         }

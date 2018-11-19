@@ -68,13 +68,14 @@
 		
     <style type="text/css">
        .xborder{ border: 1px solid red;}
-       #custtitlebox{ height: 205px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
+       #custtitlebox{ height: 275px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
         #amt{ color: #000; margin-top: 35px; text-align: right; font-weight: bold;}
         #amt span{ color: blue;}
         .labelx{ font-weight: bold; color: #000;}
         #table_summary{ font-size: 16px; color: #000;}
         .amt{ text-align: right;}
         .custtext{ margin: 3px; float: left; width: 210px;}
+        #addressbox{ margin: 3px 3px 3px 0px; height: 100px;}
     </style>
 
 <!-- form atas   -->
@@ -88,7 +89,8 @@
                <div class="col-md-4 col-sm-12 col-xs-12">
                    <label class="control-label labelx"> * Pelanggan </label>
                    <table>
-<tr> <td> <input type="text" name="no" id="no" class="form-control custtext" placeholder="No Pelanggan"> </td> </tr>
+<tr> <td> <input type="text" name="no" id="no" class="form-control custtext" placeholder="No Pelanggan"> </td>             
+</tr>
 <tr> <td> <input type="text" name="id" id="id" class="form-control custtext" placeholder="ID Pelanggan"> </td> 
      <td> 
      <button type="button" class="btn btn-success" id="brequest" style="float:left; margin:0 0 0 10px;"> GET </button> 
@@ -98,7 +100,10 @@
 <tr> <td> <input type="text" name="nama" id="nama" class="form-control custtext" placeholder="Nama Pelanggan"> 
           <input type="hidden" name="hcust" id="hcust" >
      </td> </tr>
-<tr> <td> <input type="number" name="meter" id="meter" class="form-control custtext" placeholder="No Meter"> </td> </tr>
+<tr> <td> <input type="number" name="meter" id="meter" class="form-control custtext" placeholder="No Meter"> </td> 
+    <td colspan="2"> <input type="text" id="noticket" readonly class="form-control" placeholder="No Ticket"> </td>                    
+</tr>
+<tr> <td colspan="3"> <textarea id="alamat" readonly class="form-control" style="height:70px;"></textarea> </td> </tr>
                    </table>
                  
                </div>
@@ -114,6 +119,7 @@
 </td>
 </tr>
 <tr> <td> <div id="damagebox"></div> </td> </tr>
+<tr> <td colspan="2"> <textarea id="addressbox" class="form-control" readonly></textarea> </td> </tr>
 
     </table>
                </div>
@@ -141,7 +147,7 @@
       <div class="form-group">
         <div class="col-md-4 col-sm-4 col-xs-12 col-md-offset-9">
           <div class="btn-group">    
-          <button type="submit" class="btn btn-success" id="button"> Save </button>
+          <button type="submit" class="btn btn-success" id="buttonsave"> Save </button>
           <a class="btn btn-danger" href="<?php echo site_url('complain'); ?>"> Cancel </a> 
           <a class="btn btn-primary" href="<?php echo site_url('sales/add/'); ?>"> New Transaction </a> 
           </div>
