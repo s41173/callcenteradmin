@@ -513,7 +513,7 @@ class Complain extends MX_Controller
        $data['custaddress'] = $customer[3].' - '.$customer[4];
 
        //complain
-       $data['pono'] = 'SO-'.$sid;
+       $data['pono'] = $complain->ticketno;
        $data['code'] = $complain->ticketno;
        $data['podate'] = tglincompletetime($complain->dates);
        $data['category'] = $this->category->get_name($complain->category);

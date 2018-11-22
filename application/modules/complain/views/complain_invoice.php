@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="shortcut icon" href="<?php echo base_url().'images/fav_icon.png';?>" >
-<title> Sales Order - <?php echo isset($pono) ? $pono : ''; ?></title>
+<title> Ticket Order - <?php echo isset($pono) ? $pono : ''; ?></title>
 <style media="all">
 
 	#logo { margin:0 0px 0 5px;}
@@ -46,10 +46,10 @@
 	<div style="border:0px solid #000; width:12.8cm; height:3.6cm; float:left;">
 		<img id="logo" align="left" width="100" src="<?php echo isset($logo) ? $logo : ''; ?>"> <br>
 		<p id="logotext"> 
-		  <?php echo $paddress; ?> <br> Kotamadya Medan - <?php echo $p_zip; ?> &nbsp; Telp. <?php echo $p_phone1; ?>
+		  <?php echo $paddress; ?> <br> Kota Pematangsiantar - <?php echo $p_zip; ?> &nbsp; Telp. <?php echo $p_phone1; ?>
 		  <br> E-Mail : <?php echo $p_email; ?> <br> Website : <?php echo $p_sitename; ?>
 		</p>
-		<p style="float:left; margin:0; padding:10px 0 0 85px; font-weight:bold;"> NPWP : <?php echo $p_npwp; ?> </p>
+		<p style="float:left; margin:0; padding:10px 0 0 85px; font-weight:bold;">  </p>
 	</div>
 	
 	<div style="border:0px solid; float:right;">
