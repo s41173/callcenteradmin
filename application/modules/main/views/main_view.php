@@ -87,14 +87,14 @@
             <div class="ixcon">
                 <a href="<?php echo site_url('category');?>">
                 <img alt="user" src="<?php echo base_url().'images/backup.png';?>">
-                <p> Category </p>
+                <p> Jenis Keluhan </p>
               </a>
             </div>
         
             <div class="ixcon">
                 <a href="<?php echo site_url('damage');?>">
                 <img alt="setting" src="<?php echo base_url().'images/sales.png';?>">
-                <p> Damage List </p>
+                <p> Kerusakan </p>
               </a>
         
             </div>
@@ -102,7 +102,7 @@
             <div class="ixcon">
                 <a href="<?php echo site_url('complain');?>">
                 <img alt="setting" src="<?php echo base_url().'images/receipt.png';?>">
-                <p> Ticket Support </p>
+                <p> Keluhan </p>
               </a>
         
             </div>

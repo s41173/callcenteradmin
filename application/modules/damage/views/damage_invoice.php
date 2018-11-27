@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title> Damage Receipt </title>
+<title> Bukti Kerusakan </title>
 <style media="all">
 
 	#logo { margin:0 0 0 75px;}
@@ -38,7 +38,7 @@
 
 <div style="width:750px; font-family:Arial, Helvetica, sans-serif; font-size:12px;"> 
 	
-	<h2 style="font-size:18px; font-weight:normal; text-align:center; text-decoration:underline;"> Damage Receipt </h2> <div style="clear:both; "></div> 
+	<h2 style="font-size:18px; font-weight:normal; text-align:center; text-decoration:underline;"> Bukti Kerusakan </h2> <div style="clear:both; "></div> 
 	
 	<div style="width:350px; border:0px solid #000; float:left;">
 		<table style="font-size:11px;">
@@ -55,7 +55,7 @@
 		
 		<table class="product">
 
-		 <tr> <th> Description </th> <th> Address </th> <th> Coordinate </th> <th> Staff </th> </tr>
+		 <tr> <th> Keterangan </th> <th> Alamat </th> <th> Kordinat </th> <th> Staff </th> </tr>
 		 
 		 <tr> 
          <td class="left"> <?php echo $description; ?> </td>
@@ -73,7 +73,7 @@
 			.sig td{ width:155px;}
 		</style>
 			<table border="0" class="sig">
-				<tr> <td> Approved By : </td> <td> Reviewed By : </td> </tr>
+				<tr> <td> Disetujui Oleh : </td> <td> Dibuat Oleh : </td> </tr>
 			</table> <br> <br> <br> <br> <br> <br>
 			
 			<table border="0" class="sig">

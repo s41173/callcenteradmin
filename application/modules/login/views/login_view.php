@@ -121,7 +121,7 @@ $(document).ready(function (e) {
 
         <div class="txt_field">
             <i class="fa fa-lock"></i>
-            <input name="password" id="pass" required="" placeholder="password" type="password">
+            <input name="password" id="pass" required="" placeholder="passwords" type="password">
             <input id="agent" name="agent" value="web" type="hidden">
             <div class="clr"> </div>
         </div>

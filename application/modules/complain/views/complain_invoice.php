@@ -66,7 +66,7 @@
 	<div style="clear:both; "></div>
 	
 	<h2 style="font-size:1.4em; font-weight:normal; text-align:center; margin:0px 0px 10px 0px; padding:0 0 0 25px;"> 
-	  TICKET COMPLAIN RECEIPT </h2> 
+	  BUKTI PENGADUAN PELANGGAN </h2> 
 	<div style="clear:both; "></div> 
 	<div style="clear:both; "></div>
 	
@@ -84,7 +84,7 @@
             } 
         ?>
 
-        <tr> <th> Category </th> <th> Damage </th> <th> Description </th> </tr>
+        <tr> <th> Jenis </th> <th> Lokasi </th> <th> Keterangan </th> </tr>
         <tr>
             <td> <?php echo $category; ?> </td>
             <td> <?php echo $damage; ?> </td>
@@ -104,7 +104,7 @@
 		<div style="float:right;">
 			
 			<table>
-				<p> &nbsp; &nbsp; Prepared By, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Review By, </p> <br> <br> <br> <br>
+				<p> &nbsp; &nbsp; Disediakan Oleh, &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; Ditinjau Oleh, </p> <br> <br> <br> <br>
 <p style="text-align:right;"> ( <?php echo $user; ?> ) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (_______________) </p>
 <p> &nbsp; C-Center Dept  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  </p>
 			</table>
