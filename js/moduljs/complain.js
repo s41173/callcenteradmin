@@ -67,7 +67,7 @@ $(document).ready(function (e) {
 			// 18 $acc->tax.'|'.
 			// 19 $acc->returns;
 
-			    console.log(res[13]);
+			    // console.log(res[13]);
 
 				$("#tid").val(res[0]);
 				$("#tsid").val(res[1]);
@@ -225,7 +225,7 @@ $(document).ready(function (e) {
 				success: function(result) {
 				if (result){
 
-					console.log(result);
+				//	console.log(result);
 
 				   var res = result.split('|');
 				   $("#no").val(res[0]);
