@@ -122,6 +122,14 @@
               </a>
             </div>
         
+           <div class="ixcon">
+                <a target="_blank" href="<?php echo base_url().'uploads/ug.pdf'; ?>">
+                <img alt="setting" src="<?php echo base_url().'images/receipt.png';?>">
+                <p> User guide </p>
+              </a>
+        
+            </div>
+        
        <style type="text/css">
            .tablebox{ height: 300px; overflow-y: scroll; overflow-x: auto; } 
            .chartbox{ height: 300px; overflow: hidden; } 
