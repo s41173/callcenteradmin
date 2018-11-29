@@ -149,7 +149,7 @@
           <div class="btn-group">    
           <button type="submit" class="btn btn-success" id="buttonsave"> Save </button>
           <a class="btn btn-danger" href="<?php echo site_url('complain'); ?>"> Cancel </a> 
-          <a class="btn btn-primary" href="<?php echo site_url('sales/add/'); ?>"> New Transaction </a> 
+          <a class="btn btn-primary" href="<?php echo site_url('complain/add/'); ?>"> New Transaction </a> 
           </div>
         </div>
       </div>

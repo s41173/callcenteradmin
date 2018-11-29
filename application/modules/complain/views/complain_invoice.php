@@ -55,7 +55,7 @@
 	<div style="border:0px solid; float:right;">
 		
 		<h4 id="pono"> No : <?php echo $code; ?> &nbsp; </h4>
-		<p> &nbsp; <?php echo isset($podate) ? $podate : ''; ?> </p> <br>
+		<p> P.Siantar, &nbsp; <?php echo isset($podate) ? $podate : ''; ?> </p> <br>
 		<p> To, </p> 
 		<p style="margin:8px 0 0 0;"> <b> <?php echo isset($customer) ? $customer : ''; ?> </b> </p>
 		<p> <?php echo isset($custname) ? $custname : ''; ?> - <?php echo isset($custno) ? $custno : ''; ?> <br>
