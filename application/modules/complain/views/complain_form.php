@@ -68,7 +68,7 @@
 		
     <style type="text/css">
        .xborder{ border: 1px solid red;}
-       #custtitlebox{ height: 275px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
+       #custtitlebox{ height: 425px; background-color: #E0F7FF; border-top: 3px solid #2A3F54; margin-bottom: 10px; }
         #amt{ color: #000; margin-top: 35px; text-align: right; font-weight: bold;}
         #amt span{ color: blue;}
         .labelx{ font-weight: bold; color: #000;}
@@ -76,6 +76,9 @@
         .amt{ text-align: right;}
         .custtext{ margin: 3px; float: left; width: 210px;}
         #addressbox{ margin: 3px 3px 3px 0px; height: 100px;}
+        #tname{ width: 207px; float: left; margin: 2px;}
+        #tphone{ width: 140px; float: left; margin: 1px;}
+        #cdistrict{margin: 1px 1px 20px 1px; }
     </style>
 
 <!-- form atas   -->
@@ -87,9 +90,33 @@
            <div class="form-group">
                
                <div class="col-md-4 col-sm-12 col-xs-12">
-                   <label class="control-label labelx"> * Pelanggan </label>
+                   <label class="control-label labelx"> * Jenis Pelapor </label>
                    <table>
-<tr> <td> <input type="text" name="no" id="no" class="form-control custtext" placeholder="No Pelanggan"> </td>             
+                       
+<tr> <td> <select name="ctype" id="ctype" class="form-control">
+            <option value=""> -- Jenis Pelapor -- </option>
+            <option value="0"> Pelanggan </option>
+            <option value="1"> Non Pelanggan </option>
+          </select> 
+     </td>             
+</tr>                  
+
+<tr> <td colspan="4"> <input type="text" class="form-control" name="tname" id="tname" placeholder="Nama">
+          <input type="text" class="form-control" name="tphone" id="tphone" placeholder="Nomor">
+     </td>   
+</tr>  
+                       
+<tr> <td>
+      <select name="cdistrict" id="cdistrict" class="form-control">
+            <option value=""> -- Wilayah -- </option>
+            <option value="0"> Pusat </option>
+            <option value="1"> Cabang </option>
+          </select> 
+     </td>   
+</tr> 
+                       
+<tr> <td> <label class="control-label labelx"> * Pelanggan </label> <br>
+          <input type="text" name="no" id="no" class="form-control custtext" placeholder="No Pelanggan"> </td>             
 </tr>
 <tr> <td> <input type="text" name="id" id="id" class="form-control custtext" placeholder="ID Pelanggan"> </td> 
      <td> 

@@ -11,9 +11,9 @@ $(document).ready(function (e) {
 
 
 	$('#ds1,#ds2').daterangepicker({
-        locale: {format: 'YYYY-MM-DD hh:mm A'},
+        locale: {format: 'YYYY-MM-DD'},
 		singleDatePicker: true,
-		timePicker:true,
+		timePicker:false,
         showDropdowns: true
 	 });
 	 
@@ -211,39 +211,50 @@ $(document).ready(function (e) {
 		var meter = $("#meter").val();
 		var no = $("#no").val();
 		var id = $("#id").val();
+		
 		var url = sites+'/request';
+		var mess = null;
+		var type = $("#ctype").val();
 
-		if (nama != '' || no != '' || id != '' || meter != ''){
+		if (type == 0){ 
 
-			// batas
-			$.ajax({
-				type: 'POST',
-				url: url,
-				data: "nama="+nama+"&no="+no+"&id="+id+"&meter="+meter,
-				cache: false,
-				headers: { "cache-control": "no-cache" },
-				success: function(result) {
-				if (result){
+			if (nama != '' || no != '' || id != '' || meter != '' || mess == 'required'){
 
-				//	console.log(result);
+				// batas
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: "nama="+nama+"&no="+no+"&id="+id+"&meter="+meter,
+					cache: false,
+					headers: { "cache-control": "no-cache" },
+					success: function(result) {
+					if (result){
+	
+					   var res = result.split('|');
+					   var disc = res[2].split('.');
 
-				   var res = result.split('|');
-				   $("#no").val(res[0]);
-				   $("#nama").val(res[1]);
-				   $("#id,#hcust").val(res[2]);
-				   $("#meter").val(res[3]);
-				   $("#alamat,#taddress").val(res[4]);
-				   $("#no,#nama,#id,#meter").prop('disabled', true);
-				}
-				
-				// $("#temail").val(res[0]);
-				// $("#tshipadd,#tshipaddkurir").val(res[1]);
+					   if (disc[0] == '07'){
+						$("#cdistrict").val('1').change();
+					   }else{ $("#cdistrict").val('0').change(); }
 
-				}
-			})
-			return false;
-
-		}else{ swal('Parameter Required...!', "", "error"); }
+					   $("#ctype").val('0').change();
+					   $("#no").val(res[0]);
+					   $("#nama,#tname").val(res[1]);
+					   $("#id,#hcust").val(res[2]);
+					   $("#meter").val(res[3]);
+					   $("#alamat,#taddress").val(res[4]);
+					   $("#no,#nama,#id,#meter").prop('disabled', true);
+					}
+					
+					// $("#temail").val(res[0]);
+					// $("#tshipadd,#tshipaddkurir").val(res[1]);
+	
+					}
+				})
+				return false;
+	
+			}else{ swal('Parameter Required...!', "", "error"); }
+		}
 
 	});
 
@@ -305,7 +316,7 @@ $(document).ready(function (e) {
 	{	
 		e.preventDefault();
 		$("#no").val('');
-		$("#nama").val('');
+		$("#nama,#tname").val('');
 		$("#meter").val('');
 		$("#alamat,#taddress").val('');
 		$("#id,#hcust").val('');
@@ -317,8 +328,9 @@ $(document).ready(function (e) {
 		
 		var ticket = $("#tticket").val();
 		var customer = $("#tcustomer").val();
-		var category = $("#ccategory").val();
-		var param = ['searching',ticket,customer,category];
+		var category = $("#ds1").val();
+		var phone = $("#tphone").val();
+		var param = ['searching',ticket,customer,category,phone];
 		
 		$.ajax({
 			type: 'POST',
@@ -332,6 +344,7 @@ $(document).ready(function (e) {
 				if (!param[1]){ param[1] = 'null'; }
 				if (!param[2]){ param[2] = 'null'; }
 				if (!param[3]){ param[3] = 'null'; }
+				if (!param[4]){ param[4] = 'null'; }
 				load_data_search(param);
 			}
 		});
@@ -352,10 +365,10 @@ $(document).ready(function (e) {
 			
 			var oTable = $('#datatable-buttons').dataTable();
 			var stts = 'btn btn-danger';
-			
+
 		    $.ajax({
 				type : 'GET',
-				url: source+"/"+search[0]+"/"+search[1]+"/"+search[2]+"/"+search[3],
+				url: source+"/"+search[0]+"/"+search[1]+"/"+search[2]+"/"+search[3]+"/"+search[4],
 				//force to handle it as text
 				contentType: "application/json",
 				dataType: "json",
@@ -424,7 +437,7 @@ $(document).ready(function (e) {
 										i+1,
 										s[i][1],
 										s[i][2],
-										s[i][3],
+										s[i][10]+" <br> "+s[i][11],
 										s[i][4],
 										s[i][5],
 										s[i][7],

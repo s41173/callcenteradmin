@@ -13,14 +13,14 @@ class Damage_model extends Custom_Model
         $this->tableName = 'damage';
     }
     
-    protected $field = array('id', 'dates', 'due', 'category', 'description', 'address', 'coordinate', 'status', 'approved', 'staff', 'log', 'created', 'updated', 'deleted');
+    protected $field = array('id', 'dates', 'due', 'category', 'description', 'address', 'coordinate', 'status', 'approved', 'staff', 'log', 'image', 'created', 'updated', 'deleted');
     
     function get_last($limit)
     {
         $this->db->select($this->field);
         $this->db->from($this->tableName);
         $this->db->where('deleted', NULL);
-        $this->db->order_by('id', 'asc'); 
+        $this->db->order_by('id', 'desc'); 
         $this->db->limit($limit);
         return $this->db->get(); 
     }

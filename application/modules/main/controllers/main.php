@@ -14,13 +14,12 @@ class Main extends MX_Controller
         $this->acl->otentikasi();
         $this->period = new Period_lib();
         $this->period = $this->period->get();
-//        $this->customer = new Customer_lib();
-//        $this->vendor = new Vendor_lib();
+        $this->complain = new Complain_lib();
     }
 
     var $title = 'main';
     var $limit = null;
-    private $properti,$period,$customer,$vendor;
+    private $properti,$period,$complain;
 
     function index()
     {       
@@ -49,6 +48,12 @@ class Main extends MX_Controller
        $data['month'] = get_month($this->period->month);
        $data['year'] = $this->period->year;
        $data['main_view'] = 'main/main_view';
+       
+       $data['tot_all'] = $this->complain->counter_field(); // total semua
+       $data['tot_month'] = $this->complain->counter_field(null,1,null); // total bulan ini
+       $data['tot_month_finish'] = $this->complain->counter_field(null,1,1); // total selesai bulan ini
+       $data['tot_cust'] = $this->complain->counter_field(0,1,null); // total pelanggan bulan ini
+       $data['tot_non_cust'] = $this->complain->counter_field(1,1,null); // total non pelanggan bulan ini
        
        // chart
      //  $data['archart'] = site_url()."/main/ar_chart/";

@@ -115,9 +115,9 @@ $(document).ready(function (e) {
 							 oTable.fnAddData([
 '<input type="checkbox" name="cek[]" value="'+s[i][0]+'" id="cek'+i+'" style="margin:0px"  />',
 										i+1,
-										s[i][5],
 										s[i][1],
 										s[i][2],
+										s[i][5],
 '<div class="btn-group" role"group">'+
 '<a href="" class="'+stts+' btn-xs primary_status" id="' +s[i][0]+ '" title="Primary Status"> <i class="fa fa-power-off"> </i> </a>'+
 '<a href="" class="btn btn-primary btn-xs text-primary" id="' +s[i][0]+ '" title=""> <i class="fa fas-2x fa-edit"> </i> </a>'+

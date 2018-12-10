@@ -59,7 +59,9 @@
 		<p> To, </p> 
 		<p style="margin:8px 0 0 0;"> <b> <?php echo isset($customer) ? $customer : ''; ?> </b> </p>
 		<p> <?php echo isset($custname) ? $custname : ''; ?> - <?php echo isset($custno) ? $custno : ''; ?> <br>
-		<?php echo isset($custaddress) ? $custaddress : ''; ?> </p> 
+		<?php echo isset($custaddress) ? $custaddress : ''; ?> </p> <br>
+        
+        <p> <b> Pelapor : </b> <br> <?php echo $r_name.' <br> '.$r_phone; ?> </p>
 		
 	</div>
 	

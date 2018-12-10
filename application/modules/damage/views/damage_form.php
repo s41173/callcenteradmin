@@ -34,8 +34,7 @@ $atts1 = array(
 
 ?>
 
-<form id="upload_form" data-parsley-validate class="form-horizontal form-label-left" method="POST" action="<?php echo $form_action; ?>" 
-enctype="multipart/form-data">
+<form id="upload_form" data-parsley-validate class="form-horizontal form-label-left" method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
     
       <div class="col-md-11 col-sm-9 col-xs-12 form-group"> <br>
         <label class="control-label col-md-3 col-sm-3 col-xs-12"> Trans Date </label>

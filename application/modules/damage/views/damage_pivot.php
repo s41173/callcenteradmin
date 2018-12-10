@@ -67,7 +67,7 @@
         
            <thead>
 <tr> <th> No </th> <th> Code </th> <th> Date </th> <th> Due </th> <th> Category </th> <th> Description </th>
-     <th> Address </th> <th> Coordinate </th> <th> Approval </th> <th> Status </th> <th> Staff </th> <th> Log </th>
+     <th> Address </th> <th> Coordinate </th> <th> Approval </th> <th> Status </th> <th> Interval </th> <th> Staff </th> <th> Log </th>
 </tr>
            </thead>
 		   
@@ -87,6 +87,11 @@
               function statusprogress($val){
                   if ($val == 0){ return 'Progress'; }else{ return 'Completed'; }
               }
+              
+              function interval($val){
+                  $category = new Damage_lib();
+				  return $category->get_interval($val);
+              }
 		  
 		      $i=1; 
 			  if ($reports)
@@ -105,6 +110,7 @@
                        <td class=\"strongs\">".$report->coordinate."</td>
 					   <td class=\"strongs\">".statusapproval($report->approved)."</td>
                        <td class=\"strongs\">".statusprogress($report->status)."</td>
+                       <td class=\"strongs\">".interval($report->id)."</td>
                        <td class=\"strongs\">".strtoupper($report->staff)."</td>
                        <td class=\"strongs\">".$report->log."</td>
 				   </tr>";

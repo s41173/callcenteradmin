@@ -66,12 +66,15 @@
                     datafields:
                     [
                         { name: "No", type: "string" },
+                        { name: "Type", type: "string" },
+                        { name: "District", type: "string" },
                         { name: "Ticket", type: "string" },
 						{ name: "Date", type: "string" },
 						{ name: "Customer", type: "string" },
                         { name: "Category", type: "string" },
                         { name: "Damage", type: "string" },
-                        { name: "Description", type: "string" },
+                        { name: "Status", type: "string" },
+                        { name: "Interval", type: "string" },
                         { name: "Log", type: "string" }
                     ]
                 };
@@ -96,12 +99,15 @@
 				autoshowfiltericon: false,
                 columns: [
                   { text: 'No', dataField: 'No', width: 50 },
+                  { text: 'Type', dataField: 'Type', width : 100 },
+                  { text: 'District', dataField: 'District', width : 100 },
                   { text: 'Ticket', dataField: 'Ticket', width : 100 },
 				  { text: 'Date', dataField: 'Date', width : 150 },
-				  { text: 'Customer', dataField: 'Customer', width : 120 },
+				  { text: 'Customer', dataField: 'Customer', width : 200 },
                   { text: 'Category', dataField: 'Category', width : 150 },
                   { text: 'Damage', dataField: 'Damage', width : 220 },
-                  { text: 'Description', dataField: 'Description' },
+                  { text: 'Status', dataField: 'Status', width:120 },
+                  { text: 'Interval', dataField: 'Interval', width: 100 },
                   { text: 'Log', dataField: 'Log', width : 100 }
                 ]
             });
@@ -183,8 +189,8 @@
 		<table id="table" border="0" width="100%">
 		   <thead>
            <tr>
-<th> No </th> <th> Ticket </th> <th> Date </th> <th> Customer </th> <th> Category </th> 
-<th> Damage </th> <th> Description </th> <th> Log </th>
+<th> No </th> <th> Type </th> <th> District </th> <th> Ticket </th> <th> Date </th> <th> Customer </th>
+<th> Category </th> <th> Damage </th> <th> Status </th> <th> Interval </th> <th> Log </th>
            </tr>
            </thead>
 		  
@@ -203,14 +209,27 @@
                   return 'DM-0'.$val.' : '.strtoupper($res->get_name($val));
               }
               
+              function damage_status($val)
+              {
+                  $res = new Damage_lib(); 
+                  return strtoupper($res->get_status($val));
+              }
+              
               function user($val){
                   $res = new Log_lib(); 
                   $user = new Admin_lib(); 
                   return $user->get_username($res->get_user($val));
               }
               
+              function interval($val)
+              {
+                  $res = new Damage_lib(); 
+                  return $res->get_interval($val);
+              }
+              
               function approval($val){ if ($val == 0){ return 'N'; }else{ return 'Y'; } }
-              function paid($val){ if ($val == 0){ return 'N'; }else{ return 'Y'; } }
+              function district($val){ if ($val == 0){ return 'Pusat'; }else{ return 'Cabang'; } }
+              function type($val){ if ($val == 0){ return 'Pelanggan'; }else{ return 'Non'; } }
 			  		  
 		      $i=1; 
 			  if ($reports)
@@ -220,12 +239,15 @@
 				   echo " 
 				   <tr> 
 				       <td class=\"strongs\">".$i."</td> 
+                       <td class=\"strongs\">".type($res->type)."</td>
+                       <td class=\"strongs\">".district($res->district)."</td>
                        <td class=\"strongs\">".$res->ticketno."</td> 
                        <td class=\"strongs\">".tglincompletetime($res->dates)."</td> 
-                       <td class=\"strongs\">".$res->cust_id."</td>
+                       <td class=\"strongs\">".$res->name.' - '.$res->phone."</td>
                        <td class=\"strongs\">".category($res->category)."</td>
                        <td class=\"strongs\">".damage($res->damage)."</td>
-                       <td class=\"strongs\">".$res->description."</td>
+                       <td class=\"strongs\">".damage_status($res->damage)."</td>
+                       <td class=\"strongs\">".interval($res->damage)."</td>
                        <td class=\"strongs\">".user($res->log)." / ".$res->log."</td>
 				   </tr>";
 				   $i++;

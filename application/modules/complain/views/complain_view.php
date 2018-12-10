@@ -103,9 +103,10 @@
            <form id="searchform" class="form-inline">
              
             <div class="form-group">
-                <label class="control-label labelx"> Damage : </label> <br>  
-    <?php $js = "class='select2_single form-control' id='ccategory' tabindex='-1' style='min-width:260px;' "; 
-    echo form_dropdown('ccategory', $damage, isset($default['category']) ? $default['category'] : '', $js); ?>
+                <label class="control-label labelx"> Period : </label> <br>  
+                <input type="text" title="Date" class="form-control" id="ds1" name="tdates" /> 
+    <?php // $js = "class='select2_single form-control' id='ccategory' tabindex='-1' style='min-width:260px;' "; 
+    // echo form_dropdown('ccategory', $damage, isset($default['category']) ? $default['category'] : '', $js); ?>
                    &nbsp;
             </div> 
             
@@ -115,9 +116,14 @@
             </div>  
              
             <div class="form-group">
-                <label class="control-label labelx"> Customer : </label> <br>  
+                <label class="control-label labelx"> Reporter : </label> <br>  
                 <input name="tcustomer" id="tcustomer" class="form-control" style="width:150px;"> &nbsp;
             </div>   
+               
+            <div class="form-group">
+                <label class="control-label labelx"> Reporter Phone : </label> <br>  
+                <input name="tphone" id="tphone" class="form-control" style="width:150px;"> &nbsp;
+            </div>      
               
           <div class="form-group">
            <br>   

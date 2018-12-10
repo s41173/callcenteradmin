@@ -13,7 +13,7 @@ class Complain_model extends Custom_Model
         $this->tableName = 'complain';
     }
     
-    protected $field = array('id', 'ticketno', 'dates', 'cust_id', 'damage', 'category', 'description', 'status', 'log',
+    protected $field = array('id', 'type', 'name', 'phone', 'district', 'ticketno', 'dates', 'cust_id', 'damage', 'category', 'description', 'status', 'log',
                              'created', 'updated', 'deleted');
     protected $com;
     
@@ -27,14 +27,16 @@ class Complain_model extends Custom_Model
         return $this->db->get(); 
     }
     
-    function search($ticket=null,$customer=null,$category=null)
+    function search($ticket=null,$customer=null,$category=null,$phone=null)
     {   
         $this->db->select($this->field);
         $this->db->from($this->tableName); 
         $this->db->where('deleted', $this->deleted);
-        $this->cek_null_string($customer, 'cust_id');
-        $this->cek_null_string($category, 'damage');
+        $this->cek_null_string($customer, 'name');
+        $this->cek_null_string($category, 'DATE(dates)');
+        
         $this->cek_null_string($ticket, 'ticketno');
+        $this->cek_null_string($phone, 'phone');
         
         $this->db->order_by('dates', 'desc'); 
         return $this->db->get(); 

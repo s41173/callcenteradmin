@@ -32,10 +32,10 @@ class Complain extends MX_Controller
 
 //     ============== ajax ===========================
      
-    public function getdatatable($search=null,$ticket='null',$customer='null',$category='null')
+    public function getdatatable($search=null,$ticket='null',$customer='null',$category='null',$phone='null')
     {
         if(!$search){ $result = $this->Complain_model->get_last($this->modul['limit'])->result(); }
-        else {$result = $this->Complain_model->search($ticket,$customer,$category)->result(); }
+        else {$result = $this->Complain_model->search($ticket,$customer,$category,$phone)->result(); }
 	
         $output = null;
         if ($result){
@@ -46,7 +46,8 @@ class Complain extends MX_Controller
            
 	   $output[] = array ($res->id, $res->ticketno, tglincompletetime($res->dates), $res->cust_id, 
                               'DM-0'.$res->damage.' <br> '.strtoupper($this->damage->get_name($res->damage)),
-                              $res->description, $stts, $this->damage->get_status($res->damage), $res->log
+                              $res->description, $stts, $this->damage->get_status($res->damage), $res->log, $res->type,
+                              $res->name, $res->phone, $res->district
                              );
 	} 
          
@@ -96,7 +97,7 @@ class Complain extends MX_Controller
         $this->table->set_empty("&nbsp;");
 
         //Set heading untuk table
-        $this->table->set_heading('#','No', 'Ticket No', 'Date', 'Customer', 'Damage', 'Description', 'Status', 'Action');
+        $this->table->set_heading('#','No', 'Ticket No', 'Date', 'Reporter', 'Damage', 'Description', 'Status', 'Action');
 
         $data['table'] = $this->table->generate();
         $data['source'] = site_url($this->title.'/getdatatable/');
@@ -230,7 +231,7 @@ class Complain extends MX_Controller
         $data['form_action_damage'] = site_url('damage/add_process');
 
         $data['damage'] = $this->damage->combo_id();
-        $data['category'] = $this->category->combo();
+        $data['category'] = $this->category->combo_child();
         
         $data['source'] = site_url($this->title.'/getdatatable');
         $data['graph'] = site_url()."/complain/chart/";
@@ -250,15 +251,19 @@ class Complain extends MX_Controller
 	$data['link'] = array('link_back' => anchor('category/','<span>back</span>', array('class' => 'back')));
 
 	// Form validation
-        $this->form_validation->set_rules('hcust', 'Customer Required', 'required');
-        $this->form_validation->set_rules('ccategory', 'Category', 'required');
+        $this->form_validation->set_rules('ctype', 'Jenis Pelapor', 'required');
+        $this->form_validation->set_rules('hcust', 'Customer Required', 'callback_valid_customer');
+        $this->form_validation->set_rules('ccategory', 'Category', 'required|callback_valid_category');
         $this->form_validation->set_rules('tdescription', 'Description', 'required');
+        $this->form_validation->set_rules('tname', 'Nama Pelapor', 'required');
+        $this->form_validation->set_rules('tphone', 'No HP Pelapor', 'numeric');
 
         if ($this->form_validation->run($this) == TRUE)
         {   
             $ticket = '0'.$this->Complain_model->counter().date("mdHi");
-            $complain = array('cust_id' => $this->input->post('hcust'), 'dates' => date("Y-m-d H:i:s"), 
-                           'ticketno' => $ticket, 'category' => $this->input->post('ccategory'),
+            $complain = array('cust_id' => $this->input->post('hcust'), 'dates' => date("Y-m-d H:i:s"),
+                           'type' => $this->input->post('ctype'), 'name' => $this->input->post('tname'), 'phone' => $this->input->post('tphone'),
+                           'ticketno' => $ticket, 'category' => $this->input->post('ccategory'), 'district' => $this->input->post('cdistrict'),
                            'description' => $this->input->post('tdescription'), 'damage' => $this->input->post('cdamage'), 
                            'status' => 1, 
                            'created' => date('Y-m-d H:i:s'), 'log' => $this->session->userdata('log'));
@@ -511,6 +516,8 @@ class Complain extends MX_Controller
        $data['custname'] = $customer[1];
        $data['custno'] = $customer[0];
        $data['custaddress'] = $customer[3].' - '.$customer[4];
+       $data['r_name'] = $complain->name;
+       $data['r_phone'] = $complain->phone;
 
        //complain
        $data['pono'] = $complain->ticketno;
@@ -574,6 +581,20 @@ class Complain extends MX_Controller
         else{ echo "error|".validation_errors(); }
         }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
         //redirect($this->title.'/update/'.$param);
+    }
+    
+    function valid_customer($val){
+        if ($this->input->post('ctype') == 0){
+           if (!$val){
+            $this->form_validation->set_message('valid_customer', "Customer Required..!"); return FALSE;
+           }else{ return TRUE; }
+        }else{ return TRUE; }
+    }
+    
+    function valid_category($val){
+        if ($val == 0){
+            $this->form_validation->set_message('valid_category', "Category Required..!"); return FALSE;
+        }else{ return TRUE; }
     }
     
     function valid_return($val)

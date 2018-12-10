@@ -34,7 +34,7 @@ $atts1 = array(
 
 ?>
  
- <form id="edit_form_non" data-parsley-validate class="form-horizontal form-label-left" method="POST" 
+ <form id="upload_form" data-parsley-validate class="form-horizontal form-label-left" method="POST" 
  action="<?php echo site_url('damage/confirmation_process'); ?>" enctype="multipart/form-data">
 
       <div class="col-md-11 col-sm-9 col-xs-12 form-group"> <br>
@@ -50,6 +50,14 @@ $atts1 = array(
         <div class="col-md-6 col-sm-6 col-xs-12">
             <input type="text" title="In Charge Staff" class="form-control" id="tstaff_update_confirm" name="tstaff" /> 
         </div>
+      </div>
+     
+     <div class="form-group">
+      <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12"> Image </label>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+          <input type="file" id="uploadImage" accept="image/*" class="input-medium" title="Upload" name="userfile" /> <br>
+          <img id="catimg" style=" max-width:50px; height:auto;">
+      </div>
       </div>
           
       <div class="ln_solid"></div>

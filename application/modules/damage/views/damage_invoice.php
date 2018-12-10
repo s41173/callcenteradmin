@@ -44,11 +44,21 @@
 		<table style="font-size:11px;">
 			<tr> <td> Code </td> <td>:</td> <td> <?php echo $pid; ?> </td> </tr>
             <tr> <td> Category </td> <td>:</td> <td> <?php echo $category; ?> </td> </tr>
-            <tr> <td> Period </td> <td>:</td> <td> <?php echo $date.' - '.$due; ?> </td> </tr>
+            <tr> <td> Periode </td> <td>:</td> <td> <?php echo $date.' - '.$due; ?> </td> </tr>
             <tr> <td> Status </td> <td>:</td> <td> <?php echo $status; ?> </td> </tr>
+            <tr> <td> Estimasi </td> <td>:</td> <td> <?php echo $estimate; ?> </td> </tr>
 		</table>
 	</div>
-	
+    
+    <div style="border:0px solid; float:right;">
+		<table style="font-size:11px;">
+			<tr> <td> Pelanggan </td> <td>:</td> <td> <?php echo $custname; ?> </td> </tr>
+            <tr> <td> Telp </td> <td>:</td> <td> <?php echo $custphone; ?> </td> </tr>
+            <tr> <td> Jenis </td> <td>:</td> <td> <?php echo $custtype; ?> </td> </tr>
+		</table>
+	</div>
+    
+
 	<div style="clear:both; "></div>
 	
 	<div style="margin:3px 0 0 0; border-bottom:0px dotted #000;">

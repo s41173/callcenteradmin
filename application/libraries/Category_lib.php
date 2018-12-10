@@ -31,14 +31,32 @@ class Category_lib extends Main_Model {
 
     function combo()
     {
-        $data['options'][0] = 'Top';
         $this->db->select($this->field);
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
 //        $this->db->where('parent_id >',0);
         $this->db->order_by('name', 'asc');
-        $val = $this->db->get($this->tableName)->result();
-        foreach($val as $row){ $data['options'][$row->id] = ucfirst($row->name); }
+        $val = $this->db->get($this->tableName);
+        if ($val->num_rows() > 0){
+            $result = $val->result();
+            foreach($result as $row){ $data['options'][$row->id] = ucfirst($row->name); }
+        }else{ $data['options'][0] = '--'; }
+        return $data;
+    }
+    
+    function combo_child()
+    {
+        $data['options'][0] = '--';
+        $this->db->select($this->field);
+        $this->db->where('deleted', NULL);
+        $this->db->where('publish',1);
+        $this->db->where('parent_id >',0);
+        $this->db->order_by('name', 'asc');
+        $val = $this->db->get($this->tableName);
+        if ($val->num_rows() > 0){
+            $result = $val->result();
+            foreach($result as $row){ $data['options'][$row->id] = ucfirst($row->name); }
+        }else{ $data['options'][0] = '--'; }
         return $data;
     }
 

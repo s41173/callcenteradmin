@@ -18,10 +18,11 @@ class Damage extends MX_Controller
         $this->load->library('terbilang');
         $this->category = new Category_lib();
         $this->complain = new Complain_lib();
+        $this->damage = new Damage_lib();
     }
 
     private $properti, $modul, $title,$category;
-    private $user, $complain;
+    private $user, $complain, $damage;
 
     private  $atts = array('width'=> '800','height'=> '600',
                       'scrollbars' => 'yes','status'=> 'yes',
@@ -141,7 +142,10 @@ class Damage extends MX_Controller
         $val = $this->Damage_model->get_by_id($uid)->row();
             
         if ($val->approved == 1)
-        { $value = array('approved' => 0, 'status' => 0,); $this->Damage_model->update($uid, $value);             
+        { 
+           $image = "./images/damage/".$val->image;
+            @unlink("$image");
+           $value = array('approved' => 0, 'status' => 0,); $this->Damage_model->update($uid, $value);             
            echo "warning|1 $this->title successfully rollback..!";
         }
         else{ $this->Damage_model->delete($uid);
@@ -162,7 +166,7 @@ class Damage extends MX_Controller
         $this->form_validation->set_rules('taddress', 'Address Location', 'required');
 
         if ($this->form_validation->run($this) == TRUE)
-        {
+        {   
             $damage = array('dates' => $this->input->post('tdates'), 'category' => $this->input->post('ccategory'),
                             'description' => $this->input->post('tdesc'), 'address' => $this->input->post('taddress'), 
                             'coordinate' => $this->input->post('tccordinate'),
@@ -208,6 +212,17 @@ class Damage extends MX_Controller
         }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
     }
     
+    private function crop_image($filename){
+        
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = './images/damage/'.$filename;
+        $config['maintain_ratio'] = TRUE;
+        $config['width']	= 300;
+        $config['height']	= 300;
+        $this->load->library('image_lib', $config); 
+        $this->image_lib->resize();
+    }
+    
     function confirmation_process()
     {
         if ($this->acl->otentikasi2($this->title,'ajax') == TRUE){
@@ -218,11 +233,37 @@ class Damage extends MX_Controller
 
         if ($this->form_validation->run($this) == TRUE && $this->valid_confirmation($this->input->post('tid')) == FALSE && $this->valid_status($this->input->post('tid')) == TRUE)
         {
-           $damage = array('status' => 1, 'due' => $this->input->post('tduedates'),
-                           'staff' => $this->input->post('tstaff'), 'log' => $this->session->userdata('log'));
+            
+            $config['upload_path'] = './images/damage/';
+            $config['file_name'] = split_space('DM_0'.$this->input->post('tid'));
+            $config['allowed_types'] = 'jpg|gif|png|jpeg';
+            $config['overwrite'] = true;
+            $config['max_size']	= '50000';
+            $config['max_width']  = '30000';
+            $config['max_height']  = '30000';
+            $config['remove_spaces'] = TRUE;
 
+            $this->load->library('upload', $config); 
+            
+            if ( !$this->upload->do_upload("userfile")) // if upload failure
+            {
+                $info['file_name'] = null;
+                $data['error'] = $this->upload->display_errors();
+                $damage = array('status' => 1, 'due' => $this->input->post('tduedates'),
+                           'staff' => $this->input->post('tstaff'), 'image' => $info['file_name'], 'log' => $this->session->userdata('log'));
+            }
+            else
+            {
+                $info = $this->upload->data();
+                $this->crop_image($info['file_name']);
+                $damage = array('status' => 1, 'due' => $this->input->post('tduedates'),
+                           'staff' => $this->input->post('tstaff'), 'image' => $info['file_name'], 'log' => $this->session->userdata('log'));
+                                
+            }
+            
             $this->Damage_model->update($this->input->post('tid'), $damage);
-            echo 'true|Data successfully saved..!';
+            if ($this->upload->display_errors()){ echo "warning|".$this->upload->display_errors(); }
+            else { echo 'true|'.$this->title.' successfully saved..!|'.base_url().'images/damage/'.$info['file_name']; }
         }
         elseif ($this->valid_confirmation($this->input->post('tid')) != FALSE){ echo "warning|Journal not approved, can't updated..!"; }
         elseif ($this->valid_status($this->input->post('tid')) != TRUE){ echo "warning|Status already confirmed, can't updated..!"; }
@@ -291,11 +332,18 @@ class Damage extends MX_Controller
        $data['coordinate'] = $damage->coordinate;
        $data['status'] = $stts;
        $data['staff'] = $damage->staff;
+       $data['estimate'] = $this->damage->get_interval($pid);
        
        if ($damage->approved == 1){ $approval = 'Y'; }else{ $approval = 'N'; }
        $data['approved'] = $approval;
        $data['log'] = $this->session->userdata('log');
        $data['user'] = $this->session->userdata('username');
+       
+       // customer data
+       $cust = $this->complain->get_based_damage($pid);
+       $data['custname'] = $cust->name;
+       $data['custphone'] = $cust->phone;
+       if ($cust->type == 0){ $data['custtype'] = 'Pelanggan'; }else{ $data['custtype'] = 'Non Pelanggan'; }
 
        $this->load->view('damage_invoice', $data);
    }
