@@ -341,8 +341,14 @@ class Damage extends MX_Controller
        
        // customer data
        $cust = $this->complain->get_based_damage($pid);
-       $data['custname'] = $cust->name;
-       $data['custphone'] = $cust->phone;
+       if ($cust){
+          $data['custname'] = $cust->name;
+          $data['custphone'] = $cust->phone;
+       }else{
+           $data['custname'] = '';
+           $data['custphone'] = '';
+       }
+       
        if ($cust->type == 0){ $data['custtype'] = 'Pelanggan'; }else{ $data['custtype'] = 'Non Pelanggan'; }
 
        $this->load->view('damage_invoice', $data);
