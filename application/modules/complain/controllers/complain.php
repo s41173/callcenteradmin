@@ -18,10 +18,16 @@ class Complain extends MX_Controller
         $this->damage = new Damage_lib();
         $this->api = new Api_lib();
         $this->category = new Category_lib();
+        $this->api = new Api_lib();
+        
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'); 
+        
     }
 
-    private $properti, $modul, $title;
-    private $role, $damage, $api, $category;
+    private $properti, $modul, $title, $api;
+    private $role, $damage, $category;
     
     function index()
     {   
@@ -209,6 +215,19 @@ class Complain extends MX_Controller
         }
     }
     
+    function cek_user($type=null){
+        
+        if ($type){ 
+           $nilai = '{ "no_pelanggan":"", "nama_pelanggan":"", "no_meter":"", "id_pelanggan":"'.$type.'" }';
+           $url = constant("API").'customers';
+           $response = $this->api->request($url, $nilai);
+           $datax = (array) json_decode($response, true);
+           if ($datax){ 
+              echo $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['No_Meter'].'|'.$datax[0]['Alamat'].' - '.$datax[0]['No_Rumah'];
+           }
+       }
+    }
+    
     function combo_damage($category){
         
         $damage = $this->damage->combo_category($category);
@@ -238,6 +257,69 @@ class Complain extends MX_Controller
         $data['default']['dates'] = date("Y/m/d");
 
         $this->load->view('template', $data);
+    }
+    
+    private function valid_json($param){
+        
+      // custid  
+      // name 
+      // phone
+      // description
+        
+      if (isset($param['custid']) && isset($param['name']) && isset($param['phone']) && isset($param['description']))
+      { return TRUE; }else{ return FALSE; }
+    }
+    
+    function add_json()
+    {
+        $datax = (array)json_decode(file_get_contents('php://input'));  
+        $status = 200;
+        $error = null;
+        
+        if ($this->valid_json($datax) == TRUE)
+        { 
+            $ticket = '0'.$this->Complain_model->counter().date("mdHi");
+            $complain = array('cust_id' => $datax['custid'], 'dates' => date("Y-m-d H:i:s"),
+                              'type' => 0, 'name' => $datax['name'], 'phone' => $datax['phone'],
+                              'ticketno' => $ticket, 'category' => 0, 'district' => 0,
+                              'description' => $datax['description'], 'damage' => 0, 
+                              'status' => 1, 
+                              'created' => date('Y-m-d H:i:s'), 'log' => $this->session->userdata('log'));
+
+            $this->Complain_model->add($complain);
+            $error = $ticket;
+        }
+        else{ $error = "JSON Invalid Format"; $status = 401; }
+        $response = array('error' => $error); 
+        $this->api->response($response, $status);
+    }
+    
+    function get_complain_by_customer_json(){
+        
+        $datax = (array)json_decode(file_get_contents('php://input'));
+        $status = 200;
+        $error = null;
+        $content = null;
+        
+        if ($datax['custid'] != null && $datax['limit'] != null && $datax['start'] != null){
+            
+            $output = null;
+            $result = $this->Complain_model->search_json($datax['custid'],$datax['limit'], $datax['start'])->result();
+            $num = $this->Complain_model->search_json($datax['custid'],$datax['limit'], $datax['start'])->num_rows();
+
+            foreach ($result as $res){
+               
+                if ($res->status == 0){ $stts = 'Pending'; }else{ $stts = 'Progress'; }
+                $output[] = array ("id" => $res->id, "ticketno" => $res->ticketno, "dates" => tglincompletetime($res->dates), 
+                                   "description" => $res->description, "status" => $stts,
+                                   "reporter" => $res->name, "reporter_phone" => $res->phone
+                             );
+            }
+
+            if ($num > 0){ $content = $output; }else{ $content = 'reachedMax'; }
+        }else{ $error = "JSON Invalid Format"; $status = 401; }
+        $response = array('content' => $content, 'error' => $error); 
+        $this->api->response($response, $status);
     }
 
     function add_process()
@@ -275,174 +357,10 @@ class Complain extends MX_Controller
         }
         else{ $data['message'] = validation_errors(); echo "error|".validation_errors(); }
         }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
-
-    }
-    
-    function add_item($sid=0)
-    { 
-       if ($this->acl->otentikasi2($this->title,'ajax') == TRUE){ 
-       if ($sid == 0){ echo 'error|Complain ID not saved'; }
-       else {
-       
-         // Form validation
-        $this->form_validation->set_rules('tpassenger', 'Passenger', 'required');
-        $this->form_validation->set_rules('tidcard', 'ID Card', 'required');
-        $this->form_validation->set_rules('cdepart', 'Depart', 'required|callback_valid_depart');
-        $this->form_validation->set_rules('tdepartdesc', 'Depart Description', '');
-        $this->form_validation->set_rules('carrived', 'Arrived', 'required');
-        $this->form_validation->set_rules('tarriveddesc', 'Arrived Description', '');
-        $this->form_validation->set_rules('tdepartdates', 'Depart Dates', 'required');
-        $this->form_validation->set_rules('tarrivedates', 'Arrived Dates', 'callback_valid_return');
-        $this->form_validation->set_rules('cairline', 'Airline', 'required');
-        $this->form_validation->set_rules('tbook', 'Book Code', 'required');
-        $this->form_validation->set_rules('tticketno', 'Ticket No', 'required');
-        $this->form_validation->set_rules('tcapital', 'Capital Price', 'required|numeric');
-        $this->form_validation->set_rules('tprice', 'Price', 'required|numeric');
-        $this->form_validation->set_rules('tdiscount', 'Discount', 'required|numeric');
-        $this->form_validation->set_rules('ctax', 'Tax Type', 'required');
-
-            if ($this->form_validation->run($this) == TRUE && $this->valid_confirm($sid) == TRUE)
-            {
-                // start transaction 
-                $this->db->trans_start(); 
-                
-                $amt = floatval($this->input->post('tprice')-$this->input->post('tdiscount'));
-                $tax = floatval($this->input->post('ctax')*$amt);
-                $id = $this->sitem->counter();
-                
-                if ($this->airport->get_country($this->input->post('cdepart')) == $this->airport->get_country($this->input->post('carrived'))){
-                    if ($this->airport->get_country($this->input->post('cdepart')) == 'id'){
-                        $country = 'id';
-                    }else{ $country = 'int'; }
-                }else{ $country = 'int'; }
-                if ($this->input->post('ckreturn') == 0){ $return = 'FALSE'; }else{ $return = 'TRUE'; }
-                
-                $complain = array('id' => $id, 'complain_id' => $sid, 'passenger' => $this->input->post('tpassenger'), 'idcard' => $this->input->post('tidcard'),
-                               'source' => $this->input->post('cdepart'), 'dates' => $this->input->post('tdepartdates'), 'source_desc' => $this->input->post('tdepartdesc'),
-                               'destination' => $this->input->post('carrived'), 'return_dates' => setnull($this->input->post('tarrivedates')), 'destination_desc' => $this->input->post('tarriveddesc'),
-                               'returns' => $return, 'ticketno' => $this->input->post('tticketno'), 'bookcode' => $this->input->post('tbook'), 'airline' => $this->input->post('cairline'), 'vendor' => setnull($this->input->post('cvendor')),
-                               'tax' => $tax, 'discount' => $this->input->post('tdiscount'), 'country' => $country,
-                               'hpp' => $this->input->post('tcapital'), 'price' => $this->input->post('tprice'), 'amount' => floatval($amt+$tax));
-//
-                $this->sitem->add($complain);
-                $this->update_trans($sid);
-                echo "true|Complain Transaction data successfully saved!|";
-                
-                $this->db->trans_complete();
-                // end transaction
-            }
-            else{ echo "error|".validation_errors(); }  
-        }
-       }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
-    }
-    
-    
-    function update_item_process()
-    { 
-       if ($this->acl->otentikasi2($this->title,'ajax') == TRUE){ 
-       
-         // Form validation
-        $this->form_validation->set_rules('tpassenger', 'Passenger', 'required');
-        $this->form_validation->set_rules('tidcard', 'ID Card', 'required');
-        $this->form_validation->set_rules('cdepart', 'Depart', 'required|callback_valid_depart');
-        $this->form_validation->set_rules('tdepartdesc', 'Depart Description', '');
-        $this->form_validation->set_rules('carrived', 'Arrived', 'required');
-        $this->form_validation->set_rules('tarriveddesc', 'Arrived Description', '');
-        $this->form_validation->set_rules('tdepartdates', 'Depart Dates', 'required');
-        $this->form_validation->set_rules('tarrivedates', 'Arrived Dates', 'callback_valid_return');
-        $this->form_validation->set_rules('cairline', 'Airline', 'required');
-        $this->form_validation->set_rules('tbook', 'Book Code', 'required');
-        $this->form_validation->set_rules('tticketno', 'Ticket No', 'required');
-        $this->form_validation->set_rules('tcapital', 'Capital Price', 'required|numeric');
-        $this->form_validation->set_rules('tprice', 'Price', 'required|numeric');
-        $this->form_validation->set_rules('tdiscount', 'Discount', 'required|numeric');
-        $this->form_validation->set_rules('ctax', 'Tax Type', 'required');
-
-            if ($this->form_validation->run($this) == TRUE && $this->valid_confirm($this->input->post('tsid')) == TRUE)
-            {
-                // start transaction 
-                $this->db->trans_start(); 
-                
-                $amt = floatval($this->input->post('tprice')-$this->input->post('tdiscount'));
-                $tax = floatval($this->input->post('ctax')*$amt);
-                $id = $this->sitem->counter();
-                
-                if ($this->airport->get_country($this->input->post('cdepart')) == $this->airport->get_country($this->input->post('carrived'))){
-                    if ($this->airport->get_country($this->input->post('cdepart')) == 'id'){
-                        $country = 'id';
-                    }else{ $country = 'int'; }
-                }else{ $country = 'int'; }
-                if ($this->input->post('ckreturn') == 0){ $return = 'FALSE'; }else{ $return = 'TRUE'; }
-                
-                $complain = array('passenger' => $this->input->post('tpassenger'), 'idcard' => $this->input->post('tidcard'),
-                               'source' => $this->input->post('cdepart'), 'dates' => $this->input->post('tdepartdates'), 'source_desc' => $this->input->post('tdepartdesc'),
-                               'destination' => $this->input->post('carrived'), 'return_dates' => setnull($this->input->post('tarrivedates')), 'destination_desc' => $this->input->post('tarriveddesc'),
-                               'returns' => $return, 'ticketno' => $this->input->post('tticketno'), 'bookcode' => $this->input->post('tbook'), 'airline' => $this->input->post('cairline'), 'vendor' => setnull($this->input->post('cvendor')),
-                               'tax' => $tax, 'discount' => $this->input->post('tdiscount'), 'country' => $country,
-                               'hpp' => $this->input->post('tcapital'), 'price' => $this->input->post('tprice'), 'amount' => floatval($amt+$tax));
-
-                $this->sitem->update_id($this->input->post('tid'), $complain);
-                $this->update_trans($this->input->post('tsid'));
-                echo "true|Complain Transaction data successfully saved!|";
-                
-                $this->db->trans_complete();
-                // end transaction
-            }
-            else{ echo "error|".validation_errors(); }  
-        
-       }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
-    }
-    
-    private function update_trans($sid)
-    {
-        $totals = $this->sitem->total($sid);
-        $price = $totals['price'];
-        
-        $complain = $this->Complain_model->get_by_id($sid)->row();
-        $cost = $complain->cost;
-        
-        // total        
-        $transaction = array('tax' => $totals['tax'], 'total' => $price, 'discount' => $totals['discount'], 
-                             'amount' => intval($totals['amount']+$cost), 'cost' => $cost);
-	$this->Complain_model->update($sid, $transaction);
     }
     
     private function split_array($val)
     { return implode(",",$val); }
-   
-    function shipping($sid=0)
-    { 
-       if ($this->acl->otentikasi2($this->title,'ajax') == TRUE){ 
-       if ($sid == 0){ echo 'error|Complain ID not saved'; }
-       else {
-       
-        $complain = $this->Complain_model->get_by_id($sid)->row();
-           
-         // Form validation
-        $this->form_validation->set_rules('ccity', 'City', 'required');
-        $this->form_validation->set_rules('tshipaddkurir', 'Shipping Address', 'required');
-        $this->form_validation->set_rules('ccourier', 'Courier Service', 'required');
-        $this->form_validation->set_rules('cpackage', 'Package Type', '');
-        $this->form_validation->set_rules('tweight', 'Weight', 'required|numeric');
-
-            if ($this->form_validation->run($this) == TRUE && $this->valid_confirm($sid) == TRUE)
-            {
-                $city = explode('|', $this->input->post('ccity'));
-                $package = explode('|', $this->input->post('cpackage'));
-                $param = array('complain_id' => $sid, 'shipdate' => null,
-                               'courier' => $this->input->post('ccourier'), 'dest' => $city[1], 'dest_id' => $city[0],
-                               'dest_desc' => $this->input->post('tshipaddkurir'), 'package' => $package[0],
-                               'weight' => $this->input->post('tweight'), 'rate' => $this->input->post('rate'),
-                               'amount' => intval($this->input->post('rate')*$this->input->post('tweight')));
-                
-                $this->shipping->create($sid, $param);
-                $this->update_trans($sid);
-                echo "true|Shipping Transaction data successfully saved!|";
-            }
-            else{ echo "error|".validation_errors(); }
-        }
-       }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
-    }
     
     function update_item($uid)
     {
@@ -686,40 +604,6 @@ class Complain extends MX_Controller
         if ($type == 0){ $this->load->view('complain_report', $data); }
         elseif($type == 1) { $this->load->view('complain_pivot', $data); }
     } 
-    
-    function receivable_process()
-    {
-        $this->acl->otentikasi2($this->title);
-        $data['title'] = $this->properti['name'].' | Report '.ucwords($this->modul['title']);
-
-        $data['rundate'] = tglin(date('Y-m-d'));
-        $data['log'] = $this->session->userdata('log');
-        $period = $this->input->post('reservation');  
-        $start = picker_between_split($period, 0);
-        $end = picker_between_split($period, 1);
-
-        $data['start'] = tglin($start);
-        $data['end'] = tglin($end);
-        
-        $cust = $this->input->post('ccustomer');
-        $trans = $this->input->post('ctrans');
-
-        $data['currency'] = 'IDR';
-        $data['start'] = tglin($start);
-        $data['end'] = tglin($end);
-
-        $data['rundate'] = tgleng(date('Y-m-d'));
-        $data['log'] = $this->session->userdata('log');
-        
-        // Property Details
-        $data['company'] = $this->properti['name'];
-        
-        $data['customer'] = $this->customer->get_name($cust);
-        $data['open'] = $this->trans->get_sum_transaction_open_balance(null, 'IDR', $start, $cust, 'AR', $trans);
-        $data['trans'] = $this->trans->get_transaction(null, 'IDR', $start, $end, $cust, 'AR', $trans)->result();
-        
-        $this->load->view('receivable_card', $data);
-    }
 
 }
 

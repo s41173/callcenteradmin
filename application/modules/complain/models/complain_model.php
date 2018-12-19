@@ -42,6 +42,17 @@ class Complain_model extends Custom_Model
         return $this->db->get(); 
     }
     
+    function search_json($customer=null,$limit=0,$offset=0)
+    {   
+        $this->db->select($this->field);
+        $this->db->from($this->tableName); 
+        $this->db->where('deleted', $this->deleted);
+        $this->cek_null($customer, 'cust_id');
+        $this->db->order_by('dates', 'desc'); 
+        $this->db->limit($limit, $offset);
+        return $this->db->get(); 
+    }
+    
         
     function get_by_code($uid)
     {

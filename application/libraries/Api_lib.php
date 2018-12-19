@@ -1,9 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Api_lib {
+class Api_lib extends Main_model {
 
-    public function __construct(){
- 
+    public function __construct($deleted=NULL)
+    {
+        $this->deleted = $deleted;
+        $this->tableName = 'complain';
     }
 
     private $ci;
@@ -36,6 +38,17 @@ class Api_lib {
         if ($err) { return $err; }
         else { return $response; }
     }
+    
+    function response($data, $status = 200){ 
+          $this->output
+            ->set_status_header($status)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ))
+            ->_display();
+            exit;  
+    }
+    
+    
     
 }
 

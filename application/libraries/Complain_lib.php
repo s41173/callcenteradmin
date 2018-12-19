@@ -6,8 +6,10 @@ class Complain_lib extends Main_Model {
     {
         $this->deleted = $deleted;
         $this->tableName = 'complain';
+        $this->api = new Api_lib();
     }
     
+    private $api;
     protected $field = array('id', 'type', 'name', 'phone', 'district', 'ticketno', 'dates', 'cust_id', 'category', 'damage', 'description', 'status', 'log', 'created', 'updated', 'deleted');
     
     function get()
