@@ -344,13 +344,13 @@ class Damage extends MX_Controller
        if ($cust){
           $data['custname'] = $cust->name;
           $data['custphone'] = $cust->phone;
+          if ($cust->type == 0){ $data['custtype'] = 'Pelanggan'; }else{ $data['custtype'] = 'Non Pelanggan'; }
        }else{
            $data['custname'] = '';
            $data['custphone'] = '';
+           $data['custtype'] = '';
        }
        
-       if ($cust->type == 0){ $data['custtype'] = 'Pelanggan'; }else{ $data['custtype'] = 'Non Pelanggan'; }
-
        $this->load->view('damage_invoice', $data);
    }
   
