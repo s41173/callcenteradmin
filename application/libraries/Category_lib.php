@@ -47,7 +47,7 @@ class Category_lib extends Main_Model {
     
     function combo_child()
     {
-        $data['options'][0] = '--';
+//        $data['options'][0] = '--';
         $this->db->select($this->field);
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
