@@ -34,10 +34,11 @@ class Category_lib extends Main_Model {
         $this->db->select($this->field);
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
-//        $this->db->where('parent_id >',0);
+        $this->db->where('parent_id',0);
         $this->db->order_by('name', 'asc');
         $val = $this->db->get($this->tableName);
         if ($val->num_rows() > 0){
+            $data['options'][0] = '--';
             $result = $val->result();
             foreach($result as $row){ $data['options'][$row->id] = ucfirst($row->name); }
         }else{ $data['options'][0] = '--'; }
@@ -71,15 +72,14 @@ class Category_lib extends Main_Model {
         return $data;
     }
 
-    function combo_update($id)
+    function combo_update()
     {
         $this->db->select($this->field);
         $this->db->where('deleted', NULL);
         $this->db->where('publish',1);
         $this->db->order_by('name', 'asc');
-        $this->db->where_not_in('id', $id);
         $val = $this->db->get($this->tableName)->result();
-        $data['options'][0] = 'Top';
+        $data['options'][0] = '--';
         foreach($val as $row){ $data['options'][$row->id] = ucfirst($row->name); }
         return $data;
     }

@@ -76,6 +76,7 @@ class Category extends MX_Controller
         $data['link'] = array('link_back' => anchor('main/','Back', array('class' => 'btn btn-danger')));
 
         $data['parent'] = $this->category->combo();
+        $data['parent_update'] = $this->category->combo_update();
 	// ---------------------------------------- //
  
         $config['first_tag_open'] = $config['last_tag_open']= $config['next_tag_open']= $config['prev_tag_open'] = $config['num_tag_open'] = '<li>';
@@ -232,7 +233,6 @@ class Category extends MX_Controller
     // Fungsi update untuk menset texfield dengan nilai dari database
     function update($uid=null)
     {        
-        $data['parent'] = $this->category->combo_update($uid);
         $category = $this->Category_model->get_by_id($uid)->row();
         $data['default']['name'] = $category->name;
         $data['default']['parent'] = $category->parent_id;
@@ -276,7 +276,6 @@ class Category extends MX_Controller
         $data['main_view'] = 'category_update';
 	$data['form_action'] = site_url($this->title.'/update_process');
 	$data['link'] = array('link_back' => anchor('category/','<span>back</span>', array('class' => 'back')));
-        $data['parent'] = $this->category->combo_update($this->session->userdata('langid'));
 
 	// Form validation
         $this->form_validation->set_rules('tname_update', 'Name', 'required|max_length[100]|callback_validation_category');

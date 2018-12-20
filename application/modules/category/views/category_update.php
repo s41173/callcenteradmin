@@ -27,7 +27,7 @@
           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name"> Parent <span class="required">*</span></label>
           <div class="col-md-6 col-sm-6 col-xs-12">
                <?php $js = "class='select2_single form-control' tabindex='-1' style='width:100%;' id='cparent_update' "; 
-			        echo form_dropdown('cparent_update', $parent, isset($default['parent']) ? $default['parent'] : '', $js); 
+			        echo form_dropdown('cparent_update', $parent_update, isset($default['parent']) ? $default['parent'] : '', $js); 
 			   ?>
           </div>
       </div>

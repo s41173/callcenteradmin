@@ -84,7 +84,7 @@ class Damage extends MX_Controller
         $data['form_action_report'] = site_url($this->title.'/report_process');
         $data['link'] = array('link_back' => anchor('main/','Back', array('class' => 'btn btn-danger')));
         
-        $data['category'] = $this->category->combo_all();
+        $data['category'] = $this->category->combo_child();
 	// ---------------------------------------- //
  
         $config['first_tag_open'] = $config['last_tag_open']= $config['next_tag_open']= $config['prev_tag_open'] = $config['num_tag_open'] = '<li>';
