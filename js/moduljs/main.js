@@ -254,6 +254,7 @@ $(document).ready(function (e) {
 					// invalid file format.
 					error_mess(1,res[1]);
 					if (elem.attr('id') == "upload_form_non"){ resets(); }
+					load_data();
 				}
 				else if(res[0] == 'warning'){ error_mess(2,res[1]); }
 				else if(res[0] == 'error'){ error_mess(3,res[1]); }

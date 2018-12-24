@@ -52,7 +52,7 @@ class Complain extends MX_Controller
            
 	   $output[] = array ($res->id, $res->ticketno, tglincompletetime($res->dates), $res->cust_id, 
                               'DM-0'.$res->damage.' <br> '.strtoupper($this->damage->get_name($res->damage)),
-                              $res->description, $stts, $this->damage->get_status($res->damage), $res->log, $res->type,
+                              $res->description, $res->status, $this->damage->get_status($res->damage), $res->log, $res->type,
                               $res->name, $res->phone, $res->district
                              );
 	} 
@@ -83,6 +83,7 @@ class Complain extends MX_Controller
 
         $data['damage'] = $this->damage->combo_id();
         $data['category'] = $this->category->combo();
+        $data['category_child'] = $this->category->combo_child();
         $data['array'] = array('','');
         $data['month'] = combo_month();
         $data['year'] = date('Y');
@@ -261,11 +262,6 @@ class Complain extends MX_Controller
     
     private function valid_json($param){
         
-      // custid  
-      // name 
-      // phone
-      // description
-        
       if (isset($param['custid']) && isset($param['name']) && isset($param['phone']) && isset($param['description']))
       { return TRUE; }else{ return FALSE; }
     }
@@ -275,21 +271,26 @@ class Complain extends MX_Controller
         $datax = (array)json_decode(file_get_contents('php://input'));  
         $status = 200;
         $error = null;
+        $mess = null;
+        if ($this->valid_json($datax) == FALSE){ $mess = 'JSON Invalid Format'; }
+        if (!$mess){ if ($this->Complain_model->valid_ticket($datax['custid']) == FALSE){ $mess = 'Anda masih memiliki ticket aktif'; } }
         
-        if ($this->valid_json($datax) == TRUE)
+        if (!$mess)
         { 
+            $val = explode('.', $datax['custid']);
+            if ($val[0] == '07'){$dictrict = 1;}else{ $district = 0; }
             $ticket = '0'.$this->Complain_model->counter().date("mdHi");
             $complain = array('cust_id' => $datax['custid'], 'dates' => date("Y-m-d H:i:s"),
                               'type' => 0, 'name' => $datax['name'], 'phone' => $datax['phone'],
-                              'ticketno' => $ticket, 'category' => 0, 'district' => 0,
+                              'ticketno' => $ticket, 'category' => 0, 'district' => $district,
                               'description' => $datax['description'], 'damage' => 0, 
-                              'status' => 1, 
+                              'status' => 0, 
                               'created' => date('Y-m-d H:i:s'), 'log' => $this->session->userdata('log'));
 
             $this->Complain_model->add($complain);
             $error = $ticket;
         }
-        else{ $error = "JSON Invalid Format"; $status = 401; }
+        else{ $error = $mess; $status = 401; }
         $response = array('error' => $error); 
         $this->api->response($response, $status);
     }
@@ -372,51 +373,31 @@ class Complain extends MX_Controller
     // Fungsi update untuk menset texfield dengan nilai dari database
     function update($param=0)
     {
-        $this->acl->otentikasi2($this->title);
-        
-        $data['title'] = $this->properti['name'].' | Administrator  '.ucwords($this->modul['title']);
-        $data['h2title'] = 'Update '.$this->modul['title'];
-        $data['main_view'] = 'complain_form';
-        $data['form_action'] = site_url($this->title.'/update_process/'.$param); 
-        $data['form_action_trans'] = site_url($this->title.'/add_item/'.$param); 
-        $data['form_action_shipping'] = site_url($this->title.'/shipping/'.$param); 
-        $data['counter'] = $param; 
-	
-        $data['link'] = array('link_back' => anchor($this->title,'Back', array('class' => 'btn btn-danger')));
-        
         $complain = $this->Complain_model->get_by_id($param)->row();
-        $customer = $this->customer->get_details($complain->cust_id)->row();
-        
-        $data['customer'] = $this->customer->combo();
-        $data['vendor'] = $this->vendor->combo();
-        $data['passenger'] = $this->complain->combo_passenger();
-        $data['account'] = $this->account->combo_asset();
-        $data['airport'] = $this->airport->combo();
-        $data['airline'] = $this->airline->combo();
-        $data['tax'] = $this->tax->combo();
-        $data['payment'] = $this->payment->combo();
-        $data['source'] = site_url($this->title.'/getdatatable');
-        $data['graph'] = site_url()."/complain/chart/";
-        $data['city'] = $this->city->combo_city_combine();
-        $data['default']['dates'] = date("Y/m/d");
-        $data['code'] = $complain->code;
-        
-        $data['default']['customer'] = $complain->cust_id;
-        $data['default']['email'] = $customer->email;
-        $data['default']['ship_address'] = $customer->shipping_address;
-        $data['default']['dates'] = $complain->dates;
-        $data['default']['due_date'] = $complain->due_date;
-        $data['default']['payment'] = $complain->payment_id;
-        $data['default']['account'] = $complain->account;
-        $data['default']['costs'] = $complain->cost;
-        $data['default']['tax'] = $complain->tax;
-        $data['default']['discount'] = $complain->discount;
-        $data['default']['total'] = $complain->total;
-        $data['default']['tot_amt'] = floatval($complain->amount);
-        
-        // transaction table
-        $data['items'] = $this->sitem->get_last_item($param)->result();
-        $this->load->view('template', $data);
+        $customer = explode('|', $this->request($complain->cust_id));
+        echo $complain->id.'|'.$complain->name.'|'.$complain->phone.'|'.$complain->ticketno.'|'.$complain->dates.'|'.$complain->cust_id.'|'.$complain->category.'|'. $complain->damage.'|'.
+             $customer[1].'|'.$customer[0].'|'.$customer[3].' - '.$customer[4].'|'.$complain->description;
+    }
+    
+    function confirmation()
+    {
+        if ($this->acl->otentikasi2($this->title,'ajax') == TRUE){
+
+	// Form validation
+        $this->form_validation->set_rules('ccategory', 'Category', 'required');
+        $this->form_validation->set_rules('cdamage', 'Damage', 'required');
+        $this->form_validation->set_rules('taddress', 'Address', 'required');
+
+        if ($this->form_validation->run($this) == TRUE)
+        {     
+            $complain = array('category' => $this->input->post('ccategory'), 'status' => 1,
+                              'damage' => $this->input->post('cdamage'),'log' => $this->session->userdata('log'));
+            
+            $this->Complain_model->update($this->input->post('tid'), $complain);
+            echo "true|One $this->title data successfully saved!|";
+        }
+        else{ echo "error|".validation_errors(); }
+        }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
     }
     
    function invoice($sid=null,$type=null)

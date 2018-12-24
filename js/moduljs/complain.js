@@ -96,7 +96,7 @@ $(document).ready(function (e) {
 		
 	});
 	
-		// fungsi jquery update
+    // fungsi jquery update
 	$(document).on('click','.text-print',function(e)
 	{	e.preventDefault();
 		var element = $(this);
@@ -105,6 +105,40 @@ $(document).ready(function (e) {
 		
 		// window.location.href = url;
 		window.open(url, "_blank", "scrollbars=1,resizable=0,height=600,width=800");
+		
+	});
+
+	// fungsi mobile status
+	$(document).on('click','.text-mobile',function(e)
+	{	e.preventDefault();
+		var element = $(this);
+		var del_id = element.attr("id");
+		var url = sites_get +"/"+ del_id;
+		
+		$("#myModal1").modal('show');
+
+		$.ajax({
+			type: 'POST',
+			url: url,
+    	    cache: false,
+			headers: { "cache-control": "no-cache" },
+			success: function(result) {
+
+				res = result.split("|");
+				$("#tid").val(res[0]);
+				$("#treporter").val(res[1]); // pelapor
+				$("#tphone_confirm").val(res[2]); // pelapor phone
+				$("#tticket_confirm").val(res[3]); // ticketno
+				$("#tdatestime").val(res[4]); // date time
+				$("#tcustid").val(res[5]); // custid
+				$("#ccat").val(res[6]); // category
+				$("#cdam").val(res[7]); // damage
+				$("#tcustname").val(res[8]); // custname
+				$("#tcustaddress").val(res[10]); // address
+				$("#tdescription").val(res[11]); // description
+			}
+		})
+		return false;	
 		
 	});
 	
@@ -432,6 +466,10 @@ $(document).ready(function (e) {
 		$("#chkbox").append('<input type="checkbox" name="newsletter" value="accept1" onclick="cekall('+s.length+')" id="chkselect" class="chkselect">');
 							
 							for(var i = 0; i < s.length; i++) {
+var stts = null;
+if (s[i][6] == 0){
+     stts = '<a href="#" class="btn btn-primary btn-xs text-mobile" id="' +s[i][0]+ '" title="Mobile Status"> <i class="fas fa-mobile"></i> </a>';
+}else{ stts =''; }
 						  oTable.fnAddData([
 '<input type="checkbox" name="cek[]" value="'+s[i][0]+'" id="cek'+i+'" style="margin:0px"  />',
 										i+1,
@@ -441,7 +479,7 @@ $(document).ready(function (e) {
 										s[i][4],
 										s[i][5],
 										s[i][7],
-'<div class="btn-group" role"group">'+
+'<div class="btn-group" role"group">'+stts+
 '<a href="" class="btn btn-success btn-xs text-print" id="' +s[i][0]+ '" title="Invoice Status"> <i class="fa fa-print"> </i> </a> '+
 '<a href="#" class="btn btn-danger btn-xs text-danger" id="'+s[i][0]+'" title="delete"> <i class="fa fas-2x fa-trash"> </i> </a>'+
 '</div>'

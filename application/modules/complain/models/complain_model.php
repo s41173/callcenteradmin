@@ -84,6 +84,15 @@ class Complain_model extends Custom_Model
        $query = $this->db->get($this->tableName)->row();
        if ($query->paid_date != NULL){ return FALSE; }else{ return TRUE; }
     }
+    
+    function valid_ticket($custid)
+    {
+       $this->db->where('cust_id', $custid);
+       $this->db->where('status', 0);
+       $this->db->where('deleted', $this->deleted);
+       $query = $this->db->get($this->tableName)->num_rows();
+       if ($query > 0){ return FALSE; }else{ return TRUE; }
+    }
 
 }
 

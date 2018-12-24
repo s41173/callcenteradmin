@@ -41,6 +41,7 @@
     var sites_print_invoice  = "<?php echo site_url('complain/invoice/');?>";
     var sites_primary   = "<?php echo site_url('complain/publish/');?>";
 	var sites_attribute = "<?php echo site_url('complain/attribute/');?>";
+    var sites  = "<?php echo site_url('complain');?>";
 	var source = "<?php echo $source;?>";
     
     var url  = "<?php echo $graph;?>";
@@ -169,6 +170,12 @@
       <!-- Modal - Add Form -->
       <div class="modal fade" id="myModal" role="dialog">
          <?php $this->load->view('complain_report_panel'); ?>   
+      </div>
+      <!-- Modal - Add Form -->
+              
+      <!-- Modal - Add Form -->
+      <div class="modal fade" id="myModal1" role="dialog">
+         <?php $this->load->view('complain_confirm'); ?>   
       </div>
       <!-- Modal - Add Form -->
             
