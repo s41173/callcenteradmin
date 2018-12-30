@@ -19,10 +19,11 @@ class Damage extends MX_Controller
         $this->category = new Category_lib();
         $this->complain = new Complain_lib();
         $this->damage = new Damage_lib();
+        $this->notif = new Notif_lib();
     }
 
     private $properti, $modul, $title,$category;
-    private $user, $complain, $damage;
+    private $user, $complain, $damage, $notif;
 
     private  $atts = array('width'=> '800','height'=> '600',
                       'scrollbars' => 'yes','status'=> 'yes',
@@ -262,6 +263,7 @@ class Damage extends MX_Controller
             }
             
             $this->Damage_model->update($this->input->post('tid'), $damage);
+            $this->send_notif($this->input->post('tid'));
             if ($this->upload->display_errors()){ echo "warning|".$this->upload->display_errors(); }
             else { echo 'true|'.$this->title.' successfully saved..!|'.base_url().'images/damage/'.$info['file_name']; }
         }
@@ -269,6 +271,14 @@ class Damage extends MX_Controller
         elseif ($this->valid_status($this->input->post('tid')) != TRUE){ echo "warning|Status already confirmed, can't updated..!"; }
         else{ echo 'error|'.validation_errors(); }
         }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
+    }
+    
+    private function send_notif($uid){
+        $complain = $this->complain->get_based_damage($uid);
+        if ($complain){
+            $content = "Keluhan ticket : ".$complain->ticketno.' sudah diselesaikan. Terima kasih, PDAM Tirtauli';
+            $this->notif->send($complain->ticketno, $content);
+        }
     }
 
 

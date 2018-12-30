@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Complain_lib extends Main_Model {
+class Complain_lib extends Custom_Model {
 
     public function __construct($deleted=NULL)
     {
@@ -50,6 +50,13 @@ class Complain_lib extends Main_Model {
         $this->cek_null($stts, 'status');
         
         return $this->db->get($this->tableName)->num_rows();
+    }
+    
+    function get_by_ticket($uid)
+    {
+        $this->db->select($this->field);
+        $this->db->where('ticketno', $uid);
+        return $this->db->get($this->tableName);
     }
 
 }

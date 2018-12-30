@@ -19,6 +19,7 @@ class Complain extends MX_Controller
         $this->api = new Api_lib();
         $this->category = new Category_lib();
         $this->api = new Api_lib();
+        $this->notif = new Notif_lib();
         
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -26,7 +27,7 @@ class Complain extends MX_Controller
         
     }
 
-    private $properti, $modul, $title, $api;
+    private $properti, $modul, $title, $api,$notif;
     private $role, $damage, $category;
     
     function index()
@@ -394,11 +395,18 @@ class Complain extends MX_Controller
                               'damage' => $this->input->post('cdamage'),'log' => $this->session->userdata('log'));
             
             $this->Complain_model->update($this->input->post('tid'), $complain);
+            $this->send_notif($this->input->post('tid'));
             echo "true|One $this->title data successfully saved!|";
         }
         else{ echo "error|".validation_errors(); }
         }else { echo "error|Sorry, you do not have the right to edit $this->title component..!"; }
     }
+    
+   private function send_notif($uid){
+       $complain = $this->Complain_model->get_by_id($uid)->row();
+       $content = 'Keluhan Ticket : '.$complain->ticketno.' sedang di proses. Terima kasih, PDAM Tirtauli';
+       $this->notif->send($complain->ticketno,$content);
+   } 
     
    function invoice($sid=null,$type=null)
    {
