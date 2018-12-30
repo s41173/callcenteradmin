@@ -25,7 +25,7 @@ class Customer_login_lib
         if ($num > 0){ return FALSE; }else { return TRUE; }
     }
     
-    private function edit($user,$log,$device=null)
+    function edit($user,$log,$device=null)
     {
         $trans = array('log' => $log, 'device' => $device, 'joined' => date('Y-m-d H:i:s'));
         $this->ci->db->where('userid', $user);
@@ -49,7 +49,7 @@ class Customer_login_lib
     
     function get_device($user){
        
-        $this->ci->db->where('userid', $user);
+       $this->ci->db->where('userid', $user);
        $res = $this->ci->db->get($this->tableName)->row(); 
        return $res->device;
     }

@@ -64,7 +64,11 @@ class Api extends MX_Controller {
         $error = null;
         
         if ($user != null && $log != null){
-            if ($this->login->valid($user, $log) != TRUE){ $status = 401; $error = "Invalid Credential"; }
+            if ($this->login->valid($user, $log) != TRUE){ $status = 401; $error = "Invalid Credential"; }else{
+                if (!$this->login->get_device($user)){
+                    $this->login->edit($user, $log, $datas['device']);
+                }
+            }
         }else{ $status = 201; $error = "Wrong format..!!"; }
         
         $response = array('error' => $error); 
