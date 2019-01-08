@@ -359,6 +359,7 @@ class Complain extends MX_Controller
         $this->form_validation->set_rules('tdescription', 'Description', 'required');
         $this->form_validation->set_rules('tname', 'Nama Pelapor', 'required');
         $this->form_validation->set_rules('tphone', 'No HP Pelapor', 'numeric');
+        $this->form_validation->set_rules('cdamage', 'Damage', 'required|numeric|is_natural_no_zero');
 
         if ($this->form_validation->run($this) == TRUE)
         {   
