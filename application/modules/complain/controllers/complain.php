@@ -418,6 +418,9 @@ class Complain extends MX_Controller
        }else{ $complain = $this->Complain_model->get_by_id($sid)->row(); }
        
        // customer
+       
+       print_r($cust_id);
+       
        $customer = explode('|', $this->request($complain->cust_id));
        $data['customer'] = $complain->cust_id;
        $data['custname'] = $customer[1];
@@ -447,7 +450,7 @@ class Complain extends MX_Controller
        $data['p_sitename'] = $this->properti['sitename'];
        $data['p_email'] = $this->properti['email'];
 
-        $this->load->view('complain_invoice', $data);
+//        $this->load->view('complain_invoice', $data);
    }
     
     function update_process($param)
