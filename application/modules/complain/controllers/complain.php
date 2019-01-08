@@ -217,6 +217,24 @@ class Complain extends MX_Controller
         }
     }
     
+    function request_invoice($type=null){
+        
+        if (!$type){
+          $nama = $this->input->post('nama');
+          $no = $this->input->post('no');
+          $id = $this->input->post('id');
+          $meter = $this->input->post('meter');
+          $nilai = '{ "no_pelanggan":"'.$no.'", "nama_pelanggan":"'.$nama.'", "id_pelanggan":"'.$id.'", "no_meter":"'.$meter.'" }';
+        }else{ $nilai = '{ "no_pelanggan":"", "nama_pelanggan":"", "no_meter":"", "id_pelanggan":"'.$type.'" }'; }
+        
+        $url = constant("API").'customers';
+        $response = $this->api->request($url, $nilai);
+        $datax = (array) json_decode($response, true);
+        if ($datax){ 
+           return $datax[0]['No_Pelanggan'].'|'.$datax[0]['Nama_Pelanggan'].'|'.$datax[0]['ID_Pelanggan'].'|'.$datax[0]['Alamat'].'|'.$datax[0]['No_Rumah'];
+        }
+    }
+    
     function cek_user($type=null){
         
         if ($type){ 
@@ -419,9 +437,7 @@ class Complain extends MX_Controller
        
        // customer
        
-       print_r($cust_id);
-       
-       $customer = explode('|', $this->request($complain->cust_id));
+       $customer = explode('|', $this->request_invoice($complain->cust_id));
        $data['customer'] = $complain->cust_id;
        $data['custname'] = $customer[1];
        $data['custno'] = $customer[0];
@@ -450,7 +466,7 @@ class Complain extends MX_Controller
        $data['p_sitename'] = $this->properti['sitename'];
        $data['p_email'] = $this->properti['email'];
 
-//        $this->load->view('complain_invoice', $data);
+        $this->load->view('complain_invoice', $data);
    }
     
     function update_process($param)
