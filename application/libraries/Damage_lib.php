@@ -135,22 +135,27 @@ class Damage_lib extends Main_Model {
         $this->db->where('id', $id);
         $val = $this->db->get($this->tableName)->row();
         
-        $datetime1 =  new DateTime($val->dates);
-        $datetime2 =  new DateTime($val->due);
+        if ($val){
+            
+            $datetime1 =  new DateTime($val->dates);
+            $datetime2 =  new DateTime($val->due);
 
-        $interval = $datetime1->diff($datetime2);
+            $interval = $datetime1->diff($datetime2);
+
+            $days = intval($interval->format('%a'));
+            $hour = $interval->format('%h');
+            $minutes = $interval->format('%i');
+            $res1 = null;
+
+            if ($days >= 2){ $res1 = '> 48 jam'; }
+            elseif ($days >= 1){ $res1 = '> 24 jam'; }
+            elseif ($days == 0 && $hour > 12){ $res1 = '> 12 jam';}
+            elseif ($days == 0 && $hour < 12){ $res1 = '< 12 jam';}
+            $res2 = $days.'hari - '.$hour.'jam - '.$minutes.' menit';
+            if ($val->status == 1){ if ($type == 0){ return $res1; }else{ return $res2; } }  
+        }
         
-        $days = intval($interval->format('%a'));
-        $hour = $interval->format('%h');
-        $minutes = $interval->format('%i');
-        $res1 = null;
-        
-        if ($days >= 2){ $res1 = '> 48 jam'; }
-        elseif ($days >= 1){ $res1 = '> 24 jam'; }
-        elseif ($days == 0 && $hour > 12){ $res1 = '> 12 jam';}
-        elseif ($days == 0 && $hour < 12){ $res1 = '< 12 jam';}
-        $res2 = $days.'hari - '.$hour.'jam - '.$minutes.' menit';
-        if ($val->status == 1){ if ($type == 0){ return $res1; }else{ return $res2; } }
+
     }
 
 }
