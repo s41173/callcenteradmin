@@ -51,7 +51,7 @@ class Notif_lib extends Custom_Model {
           $res2 = $this->sms->send($val->phone, $content);  
           if ($res1 == true && $res2 == true){ $res = true; }
         }elseif ($val->type == 1){
-          $res = $this->sms->send($val->phone, $val->content);  
+          $res = $this->sms->send($val->phone, $content);  
         }
         return $res;
     }

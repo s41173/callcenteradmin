@@ -29,14 +29,14 @@ class Complain_lib extends Custom_Model {
         return intval($val);
     }
     
-    function get_based_damage($damage,$limit=1){
+    function get_based_damage($damage,$limit=10){
         
         $this->db->select($this->field);
         $this->db->where('damage', $damage);
         $this->db->where('deleted', NULL);
         $this->db->limit($limit);
         $val = $this->db->get($this->tableName);
-        if ($val->num_rows() > 0){ return $val->row(); }
+        if ($val->num_rows() > 0){ return $val; }
     }
     
     function counter_field($custtype=null,$period=null,$stts=null){

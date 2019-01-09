@@ -276,8 +276,10 @@ class Damage extends MX_Controller
     private function send_notif($uid){
         $complain = $this->complain->get_based_damage($uid);
         if ($complain){
-            $content = "Keluhan ticket : ".$complain->ticketno.' sudah diselesaikan. Terima kasih, PDAM Tirtauli';
-            $this->notif->send($complain->ticketno, $content);
+            foreach ($complain->result() as $res) {
+                $content = "Keluhan ticket : ".$res->ticketno.' sudah diselesaikan. Terima kasih, PDAM Tirtauli';
+                $this->notif->send($res->ticketno, $content);
+            }
         }
     }
 
