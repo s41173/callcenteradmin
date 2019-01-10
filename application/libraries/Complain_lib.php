@@ -36,7 +36,7 @@ class Complain_lib extends Custom_Model {
         $this->db->where('deleted', NULL);
         $this->db->limit($limit);
         $val = $this->db->get($this->tableName);
-        if ($val->num_rows() > 0){ return $val; }
+        if ($val->num_rows() > 0){ return $val->row(); }
     }
     
     function counter_field($custtype=null,$period=null,$stts=null){
